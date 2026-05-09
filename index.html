@@ -2639,12 +2639,6 @@
             const completed = fileQueue.filter(f => f.status === 'done' && f.compressed);
             if (completed.length === 0) return;
 
-            // Try Web Share API for mobile
-            if (navigator.share && completed.length > 0) {
-                shareToSystem(completed);
-                return;
-            }
-
             const suffix = currentLang === 'zh-CN' ? 'Zh' :
                            currentLang === 'en' ? 'En' :
                            currentLang === 'ja' ? 'Ja' : 'Ko';
