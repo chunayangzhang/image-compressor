@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>免费在线图片压缩器 - 支持JPEG/PNG/WebP/HEIC批量压缩</title>
+    <script>
+    (function() {
+        var lang = localStorage.getItem('lang') || 'zh-CN';
+        var titles = {
+            'zh-CN': '免费在线图片压缩器 - 支持JPEG/PNG/WebP/HEIC批量压缩',
+            'en': 'Free Online Image Compressor - Batch Compress JPEG/PNG/WebP/HEIC',
+            'ja': '無料オンライン画像圧縮ツール - JPEG/PNG/WebP/HEIC対応',
+            'ko': '무료 온라인 이미지 압축 도구 - JPEG/PNG/WebP/HEIC 지원'
+        };
+        document.title = titles[lang] || titles['zh-CN'];
+    })();
+    </script>
     <meta name="description" content="免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。">
     <meta name="keywords" content="图片压缩器,在线压缩图片,JPEG压缩,PNG压缩,WebP压缩,HEIC压缩,批量压缩图片,免费图片压缩">
     <meta name="robots" content="index, follow">
