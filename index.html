@@ -2426,13 +2426,6 @@
             shareBtn.onclick = () => shareBatchResult(completed, savedPercent);
             resultEl.appendChild(shareBtn);
 
-            // Add copy button
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'share-result-btn';
-            copyBtn.textContent = t('copyResult') || 'Copy All';
-            copyBtn.onclick = () => copyCompressedResult();
-            resultEl.appendChild(copyBtn);
-
             // Add social share buttons
             const socialDiv = document.createElement('div');
             socialDiv.className = 'social-share-btns';
@@ -2619,7 +2612,8 @@
         function copyTextSummary(completed) {
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
             const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
-            const savedPercent = originalTotal > 0 ? Math.round((1 - completed.reduce((sum, f) => sum + f.compressedSize) / originalTotal) * 100) : 0;
+            const compressedTotal = completed.reduce((sum, f) => sum + (f.compressedSize || 0), 0);
+            const savedPercent = originalTotal > 0 ? Math.round((1 - compressedTotal / originalTotal) * 100) : 0;
             const siteUrl = window.location.origin;
             const text = t('copySummaryTemplate')
                 .replace('{count}', completed.length)
