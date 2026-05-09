@@ -2375,11 +2375,22 @@
             const completed = fileQueue.filter(f => f.status === 'done');
             const errors = fileQueue.filter(f => f.status === 'error');
 
-            if (completed.length === 0) return;
+            if (completed.length === 0 && errors.length === 0) return;
+
+            if (completed.length === 0) {
+                showToast(t('compressFail'));
+                return;
+            }
 
             const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
             const compressedTotal = completed.reduce((sum, f) => sum + f.compressedSize, 0);
-            const savedPercent = ((originalTotal - compressedTotal) / originalTotal * 100).toFixed(1);
+            const savedPercent = originalTotal > 0 ? ((originalTotal - compressedTotal) / originalTotal * 100).toFixed(1) : 0;
+            const totalSaved = originalTotal - compressedTotal;
+            const shareMessage = t('shareMessage')
+                .replace(/\{count\}/g, completed.length)
+                .replace(/\{size\}/g, formatFileSize(totalSaved))
+                .replace(/\{percent\}/g, savedPercent)
+                .replace(/\{url\}/g, window.location.origin);
 
             const suffix = currentLang === 'zh-CN' ? 'Zh' :
                            currentLang === 'en' ? 'En' :
@@ -2426,11 +2437,11 @@
             const socialDiv = document.createElement('div');
             socialDiv.className = 'social-share-btns';
             socialDiv.innerHTML = `
-                <button class="social-btn twitter" onclick="shareToTwitter('${encodeURIComponent(message)}')" title="Twitter/X">𝕏</button>
-                <button class="social-btn facebook" onclick="shareToFacebook('${encodeURIComponent(message)}')" title="Facebook">f</button>
-                <button class="social-btn linkedin" onclick="shareToLinkedIn('${encodeURIComponent(message)}')" title="LinkedIn">in</button>
-                <button class="social-btn whatsapp" onclick="shareToWhatsApp('${encodeURIComponent(message)}')" title="WhatsApp">w</button>
-                ${currentLang === 'zh-CN' ? '<button class="social-btn weibo" onclick="shareToWeibo(\'' + encodeURIComponent(message) + '\')" title="微博">浪</button>' : ''}
+                <button class="social-btn twitter" onclick="shareToTwitter('${encodeURIComponent(shareMessage)}')" title="Twitter/X">𝕏</button>
+                <button class="social-btn facebook" onclick="shareToFacebook('${encodeURIComponent(shareMessage)}')" title="Facebook">f</button>
+                <button class="social-btn linkedin" onclick="shareToLinkedIn('${encodeURIComponent(shareMessage)}')" title="LinkedIn">in</button>
+                <button class="social-btn whatsapp" onclick="shareToWhatsApp('${encodeURIComponent(shareMessage)}')" title="WhatsApp">w</button>
+                ${currentLang === 'zh-CN' ? '<button class="social-btn weibo" onclick="shareToWeibo(\'' + encodeURIComponent(shareMessage) + '\')" title="微博">浪</button>' : ''}
             `;
             resultEl.appendChild(socialDiv);
 
@@ -2607,7 +2618,8 @@
 
         function copyTextSummary(completed) {
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
-            const savedPercent = Math.round((1 - completed.reduce((sum, f) => sum + f.compressedSize) / completed.reduce((sum, f) => sum + f.size)) * 100);
+            const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
+            const savedPercent = originalTotal > 0 ? Math.round((1 - completed.reduce((sum, f) => sum + f.compressedSize) / originalTotal) * 100) : 0;
             const siteUrl = window.location.origin;
             const text = t('copySummaryTemplate')
                 .replace('{count}', completed.length)
@@ -2907,7 +2919,7 @@
                     originalSize,
                     compressedSize,
                     saved: originalSize - compressedSize,
-                    savedPercent: Math.round((1 - compressedSize / originalSize) * 100),
+                    savedPercent: originalSize > 0 ? Math.round((1 - compressedSize / originalSize) * 100) : 0,
                     format,
                     quality,
                     maxWidth
