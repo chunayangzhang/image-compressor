@@ -1345,7 +1345,7 @@
                 sharePosterTitle: '图片压缩器',
                 sharePosterFooter: '免费 · 快速 · 无广告',
                 shareTitle: '图片压缩器',
-                shareMessage: '压缩了 {count} 张图片，节省 {size} ({percent}%)',
+                shareMessage: '压缩了 {count} 张图片，节省 {size} ({percent}%)\n🔗 {url}',
                 copied: '已复制到剪贴板！',
                 copySummaryTemplate: '🖼️ 图片压缩器 - 压缩了 {count} 张图片，节省 {size} ({percent}%)！\n🔗 {url}',
                 presets: {
@@ -1437,7 +1437,7 @@
                 sharePosterTitle: 'Image Compressor',
                 sharePosterFooter: 'Free · Fast · No Ads',
                 shareTitle: 'Image Compressor',
-                shareMessage: 'Compressed {count} images, saved {size} ({percent}%)',
+                shareMessage: 'Compressed {count} images, saved {size} ({percent}%)\n🔗 {url}',
                 copied: 'Copied to clipboard!',
                 copySummaryTemplate: '🖼️ Image Compressor - compressed {count} images, saved {size} ({percent}%)!\n🔗 {url}',
                 presets: {
@@ -1526,7 +1526,7 @@
                 totalLifetimeSaved: '生涯',
                 acrossAllCompressions: 'すべての圧縮で',
                 shareTitle: '画像圧縮ツール',
-                shareMessage: '{count}枚の画像を圧縮、{size}を節約 ({percent}%)',
+                shareMessage: '{count}枚の画像を圧縮、{size}を節約 ({percent}%)\n🔗 {url}',
                 copied: 'クリップボードにコピー！',
                 copySummaryTemplate: '🖼️ 画像圧縮ツール - {count}枚の画像を圧縮、{size}を節約 ({percent}%)！\n🔗 {url}',
                 presets: {
@@ -1615,7 +1615,7 @@
                 totalLifetimeSaved: '평생',
                 acrossAllCompressions: '모든 압축에서',
                 shareTitle: '이미지 압축기',
-                shareMessage: '{count}개의 이미지 압축, {size} 절약 ({percent}%)',
+                shareMessage: '{count}개의 이미지 압축, {size} 절약 ({percent}%)\n🔗 {url}',
                 copied: '클립보드에 복사！',
                 copySummaryTemplate: '🖼️ 이미지 압축기 - {count}개 이미지 압축, {size} 절약 ({percent}%)!\n🔗 {url}',
                 presets: {
@@ -2446,7 +2446,12 @@
 
         async function shareBatchResult(completed, savedPercent) {
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
-            const message = t('shareMessage') || `Compressed ${completed.length} images, saved ${formatFileSize(totalSaved)} (${savedPercent}%)!`;
+            const siteUrl = window.location.origin;
+            const messageTemplate = t('shareMessage') || `Compressed ${completed.length} images, saved ${formatFileSize(totalSaved)} (${savedPercent}%)!`;
+            const message = messageTemplate.replace(/\{count\}/g, completed.length)
+                                          .replace(/\{size\}/g, formatFileSize(totalSaved))
+                                          .replace(/\{percent\}/g, savedPercent)
+                                          .replace(/\{url\}/g, siteUrl);
 
             // Generate share poster
             const posterDataUrl = await generateSharePoster(completed, savedPercent, totalSaved);
