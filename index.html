@@ -2613,6 +2613,7 @@
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
             const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
             const compressedTotal = completed.reduce((sum, f) => sum + (f.compressedSize || 0), 0);
+            console.log('DEBUG copyTextSummary:', { totalSaved, originalTotal, compressedTotal, completed });
             const savedPercent = originalTotal > 0 ? Math.round((1 - compressedTotal / originalTotal) * 100) : 0;
             const siteUrl = window.location.origin;
             const text = t('copySummaryTemplate')
