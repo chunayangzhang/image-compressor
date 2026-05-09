@@ -2395,7 +2395,6 @@
 
             const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
             const compressedTotal = completed.reduce((sum, f) => sum + f.compressedSize, 0);
-            console.log('DEBUG showBatchResult:', { originalTotal, compressedTotal, completed });
             const savedPercent = originalTotal > 0 ? ((originalTotal - compressedTotal) / originalTotal * 100).toFixed(1) : 0;
             const totalSaved = originalTotal - compressedTotal;
             const shareMessage = t('shareMessage')
@@ -2461,7 +2460,6 @@
         }
 
         async function shareBatchResult(completed, savedPercent) {
-            console.log('DEBUG shareBatchResult:', { completed, savedPercent });
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
             const siteUrl = window.location.origin;
             const messageTemplate = t('shareMessage') || `Compressed ${completed.length} images, saved ${formatFileSize(totalSaved)} (${savedPercent}%)!`;
@@ -2589,7 +2587,6 @@
         }
 
         async function copyCompressedResult() {
-            console.log('DEBUG copyCompressedResult called');
             const completed = fileQueue.filter(f => f.status === 'done' && f.compressed);
             if (completed.length === 0) return;
 
@@ -2627,8 +2624,6 @@
             const totalSaved = completed.reduce((sum, f) => sum + (f.size - f.compressedSize), 0);
             const originalTotal = completed.reduce((sum, f) => sum + f.size, 0);
             const compressedTotal = completed.reduce((sum, f) => sum + (f.compressedSize || 0), 0);
-            console.log('DEBUG copyTextSummary:', { totalSaved, originalTotal, compressedTotal, completed });
-            console.log('DEBUG each file:', completed.map(f => ({ size: f.size, compressedSize: f.compressedSize, type: typeof f.compressedSize })));
             const savedPercent = originalTotal > 0 ? Math.round((1 - compressedTotal / originalTotal) * 100) : 0;
             const siteUrl = window.location.origin;
             const text = t('copySummaryTemplate')
