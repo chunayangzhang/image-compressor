@@ -1295,6 +1295,7 @@
         // Internationalization
         const i18n = {
             'zh-CN': {
+                pageTitle: '免费在线图片压缩器 - 支持JPEG/PNG/WebP/HEIC批量压缩',
                 selectFile: '请上传 JPEG、PNG、WebP 或 HEIC 格式的图片',
                 compressing: '正在压缩...',
                 compressed: '压缩完成!',
@@ -1386,6 +1387,7 @@
                 recommendInfo: '根据图片尺寸推荐'
             },
             'en': {
+                pageTitle: 'Free Online Image Compressor - Batch Compress JPEG/PNG/WebP/HEIC',
                 selectFile: 'Please upload JPEG, PNG, WebP or HEIC image',
                 compressing: 'Compressing...',
                 compressed: 'Compression Complete!',
@@ -1474,6 +1476,7 @@
                 recommendInfo: 'Based on image dimensions'
             },
             'ja': {
+                pageTitle: '無料オンライン画像圧縮ツール - JPEG/PNG/WebP/HEIC対応',
                 selectFile: 'JPEG、PNG、WebP、またはHEIC画像をアップロードしてください',
                 compressing: '圧縮中...',
                 compressed: '圧縮完了!',
@@ -1562,6 +1565,7 @@
                 recommendInfo: '画像サイズに基づくおすすめ'
             },
             'ko': {
+                pageTitle: '무료 온라인 이미지 압축 도구 - JPEG/PNG/WebP/HEIC 지원',
                 selectFile: 'JPEG, PNG, WebP 또는 HEIC 이미지를 업로드해 주세요',
                 compressing: '압축 중...',
                 compressed: '압축 완료!',
@@ -1859,6 +1863,7 @@
             document.querySelectorAll('.lang-app').forEach(el => {
                 el.style.display = el.dataset.lang === currentLang ? 'block' : 'none';
             });
+            document.title = i18n[currentLang].pageTitle || i18n['zh-CN'].pageTitle;
             document.getElementById('langSelect').value = currentLang;
             renderHistory();
             if (!deferredPrompt) hideInstallButton();
