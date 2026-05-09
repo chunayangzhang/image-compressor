@@ -1,0 +1,32 @@
+{
+  "name": "image-compressor",
+  "version": "1.0.0",
+  "description": "Free online image compressor supporting JPEG, PNG, WebP, and HEIC formats",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests configured\" && exit 0",
+    "dev": "npx http-server -p 3000",
+    "preview": "npx http-server -p 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chunayangzhang/image-compressor.git"
+  },
+  "keywords": [
+    "image",
+    "compression",
+    "jpeg",
+    "png",
+    "webp",
+    "heic"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chunayangzhang/image-compressor/issues"
+  },
+  "homepage": "https://github.com/chunayangzhang/image-compressor#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
