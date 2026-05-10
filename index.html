@@ -13,17 +13,50 @@
             'ko': '무료 온라인 이미지 압축 도구 - JPEG/PNG/WebP/HEIC 지원'
         };
         document.title = titles[lang] || titles['zh-CN'];
+        document.documentElement.lang = lang;
     })();
     </script>
     <meta name="description" content="免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。">
     <meta name="keywords" content="图片压缩器,在线压缩图片,JPEG压缩,PNG压缩,WebP压缩,HEIC压缩,批量压缩图片,免费图片压缩">
     <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Image Compressor">
+    <meta property="og:title" content="免费在线图片压缩器">
+    <meta property="og:description" content="免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。">
+    <meta property="og:url" content="https://image-compressor-kappa-pearl.vercel.app/">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect fill='%234F46E5' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='system-ui,sans-serif' font-size='48' font-weight='bold'%3EImage Compressor%3C/text%3E%3C/svg%3E">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta property="og:locale:alternate" content="ko_KR">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费在线图片压缩器">
+    <meta name="twitter:description" content="免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。">
+    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect fill='%234F46E5' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='system-ui,sans-serif' font-size='48' font-weight='bold'%3EImage Compressor%3C/text%3E%3C/svg%3E">
+
+    <!-- hreflang Tags -->
+    <link rel="alternate" hreflang="zh-CN" href="https://image-compressor-kappa-pearl.vercel.app/?lang=zh-CN">
+    <link rel="alternate" hreflang="en" href="https://image-compressor-kappa-pearl.vercel.app/?lang=en">
+    <link rel="alternate" hreflang="ja" href="https://image-compressor-kappa-pearl.vercel.app/?lang=ja">
+    <link rel="alternate" hreflang="ko" href="https://image-compressor-kappa-pearl.vercel.app/?lang=ko">
+    <link rel="alternate" hreflang="x-default" href="https://image-compressor-kappa-pearl.vercel.app/">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://image-compressor-kappa-pearl.vercel.app/">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" id="jsonLdData">{"@context":"https://schema.org","@type":"WebApplication","name":"免费在线图片压缩器","description":"免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。","url":"https://image-compressor-kappa-pearl.vercel.app/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":"zh-CN"}</script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4F46E5">
 </head>
 <body>
     <!-- Language Switcher -->
     <div class="lang-switcher">
+        <button id="darkModeBtn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
         <select id="langSelect">
             <option value="zh-CN">中文</option>
             <option value="en">English</option>
@@ -40,7 +73,7 @@
                 <p>在线批量压缩图片，支持 JPEG、PNG、WebP、HEIC 格式</p>
             </header>
             <div class="card">
-                <div class="upload-area" id="uploadAreaZh">
+                <div class="upload-area" id="uploadAreaZh" aria-label="上传图片区域，可点击或拖拽">
                     <div class="upload-icon">📁</div>
                     <p class="upload-text">
                         <strong>点击上传</strong> 或拖拽图片到这里<br>
@@ -88,8 +121,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="favorites-panel" id="favoritesPanelZh"></div>
-                <div class="history-panel" id="historyPanelZh"></div>
                 <div class="presets">
                     <label>快速预设：</label>
                     <button class="preset-btn" data-preset="wechat">📱 微信分享</button>
@@ -97,12 +128,13 @@
                     <button class="preset-btn" data-preset="xiaohongshu">📕 小红书</button>
                     <button class="preset-btn" data-preset="webp">🌐 WebP格式</button>
                     <button class="save-fav-btn" id="saveFavBtnZh">💾 收藏当前设置</button>
+                    <button class="copy-share-btn" id="copyShareBtnZh">🔗 复制分享链接</button>
                 </div>
                 <div class="actions">
-                    <button class="compress-btn" id="compressBtnZh" disabled>开始压缩</button>
-                    <button class="clear-btn" id="clearBtnZh" disabled>清空列表</button>
-                    <button class="download-all-btn" id="downloadAllBtnZh" disabled>下载全部</button>
-                    <button class="download-zip-btn" id="downloadZipBtnZh" disabled>📦 ZIP打包</button>
+                    <button class="compress-btn" id="compressBtnZh" disabled>请先添加图片</button>
+                    <button class="clear-btn" id="clearBtnZh" disabled>请先添加图片</button>
+                    <button class="download-all-btn" id="downloadAllBtnZh" disabled>请先添加图片</button>
+                    <button class="download-zip-btn" id="downloadZipBtnZh" disabled>请先添加图片</button>
                 </div>
                 <div class="progress-container" id="progressContainerZh">
                     <div class="progress-bar">
@@ -113,6 +145,7 @@
                 <div class="batch-result" id="batchResultZh"></div>
                 <button class="install-pwa-btn" id="installPwaBtnZh" style="display:none;" onclick="installPWA()">📲 安装到桌面</button>
                 <div class="stats-panel" id="statsPanelZh"></div>
+                <div class="badge-panel" id="badgePanelZh"></div>
             </div>
         </div>
     </div>
@@ -125,7 +158,7 @@
                 <p>Batch compress images online. Supports JPEG, PNG, WebP, HEIC</p>
             </header>
             <div class="card">
-                <div class="upload-area" id="uploadAreaEn">
+                <div class="upload-area" id="uploadAreaEn" aria-label="Upload area - click or drag images">
                     <div class="upload-icon">📁</div>
                     <p class="upload-text">
                         <strong>Click to upload</strong> or drag & drop images<br>
@@ -173,20 +206,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="favorites-panel" id="favoritesPanelEn"></div>
-                <div class="history-panel" id="historyPanelEn"></div>
                 <div class="presets">
                     <label>Presets:</label>
                     <button class="preset-btn" data-preset="social">📱 Social Media</button>
                     <button class="preset-btn" data-preset="email">📧 Email</button>
                     <button class="preset-btn" data-preset="webp">🌐 WebP Format</button>
                     <button class="save-fav-btn" id="saveFavBtnEn">💾 Save Current</button>
+                    <button class="copy-share-btn" id="copyShareBtnEn">🔗 Copy Share Link</button>
                 </div>
                 <div class="actions">
-                    <button class="compress-btn" id="compressBtnEn" disabled>Compress All</button>
-                    <button class="clear-btn" id="clearBtnEn" disabled>Clear List</button>
-                    <button class="download-all-btn" id="downloadAllBtnEn" disabled>Download All</button>
-                    <button class="download-zip-btn" id="downloadZipBtnEn" disabled>📦 ZIP</button>
+                    <button class="compress-btn" id="compressBtnEn" disabled>Please add images first</button>
+                    <button class="clear-btn" id="clearBtnEn" disabled>Please add images first</button>
+                    <button class="download-all-btn" id="downloadAllBtnEn" disabled>Please add images first</button>
+                    <button class="download-zip-btn" id="downloadZipBtnEn" disabled>Please add images first</button>
                 </div>
                 <div class="progress-container" id="progressContainerEn">
                     <div class="progress-bar">
@@ -197,6 +229,7 @@
                 <div class="batch-result" id="batchResultEn"></div>
                 <button class="install-pwa-btn" id="installPwaBtnEn" style="display:none;" onclick="installPWA()">📲 Install App</button>
                 <div class="stats-panel" id="statsPanelEn"></div>
+                <div class="badge-panel" id="badgePanelEn"></div>
             </div>
         </div>
     </div>
@@ -209,7 +242,7 @@
                 <p>画像を一括で圧縮。JPEG、PNG、WebP、HEIC対応</p>
             </header>
             <div class="card">
-                <div class="upload-area" id="uploadAreaJa">
+                <div class="upload-area" id="uploadAreaJa" aria-label="アップロードエリア - クリックまたはドラッグ">
                     <div class="upload-icon">📁</div>
                     <p class="upload-text">
                         <strong>クリックしてアップロード</strong> または画像をドロップ<br>
@@ -257,20 +290,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="favorites-panel" id="favoritesPanelJa"></div>
-                <div class="history-panel" id="historyPanelJa"></div>
                 <div class="presets">
                     <label>プリセット：</label>
                     <button class="preset-btn" data-preset="line">📱 LINE</button>
                     <button class="preset-btn" data-preset="twitter">🐦 Twitter/X</button>
                     <button class="preset-btn" data-preset="webp">🌐 WebP形式</button>
                     <button class="save-fav-btn" id="saveFavBtnJa">💾 設定を保存</button>
+                    <button class="copy-share-btn" id="copyShareBtnJa">🔗 共有リンクをコピー</button>
                 </div>
                 <div class="actions">
-                    <button class="compress-btn" id="compressBtnJa" disabled>すべて圧縮</button>
-                    <button class="clear-btn" id="clearBtnJa" disabled>クリア</button>
-                    <button class="download-all-btn" id="downloadAllBtnJa" disabled>すべてダウンロード</button>
-                    <button class="download-zip-btn" id="downloadZipBtnJa" disabled>📦 ZIP</button>
+                    <button class="compress-btn" id="compressBtnJa" disabled>画像を追加してください</button>
+                    <button class="clear-btn" id="clearBtnJa" disabled>画像を追加してください</button>
+                    <button class="download-all-btn" id="downloadAllBtnJa" disabled>画像を追加してください</button>
+                    <button class="download-zip-btn" id="downloadZipBtnJa" disabled>画像を追加してください</button>
                 </div>
                 <div class="progress-container" id="progressContainerJa">
                     <div class="progress-bar">
@@ -281,6 +313,7 @@
                 <div class="batch-result" id="batchResultJa"></div>
                 <button class="install-pwa-btn" id="installPwaBtnJa" style="display:none;" onclick="installPWA()">📲 アプリを導入</button>
                 <div class="stats-panel" id="statsPanelJa"></div>
+                <div class="badge-panel" id="badgePanelJa"></div>
             </div>
         </div>
     </div>
@@ -293,7 +326,7 @@
                 <p>이미지 일괄 압축. JPEG, PNG, WebP, HEIC 지원</p>
             </header>
             <div class="card">
-                <div class="upload-area" id="uploadAreaKo">
+                <div class="upload-area" id="uploadAreaKo" aria-label="업로드 영역 - 클릭 또는 드래그">
                     <div class="upload-icon">📁</div>
                     <p class="upload-text">
                         <strong>클릭하여 업로드</strong> 또는 이미지를 드롭<br>
@@ -341,20 +374,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="favorites-panel" id="favoritesPanelKo"></div>
-                <div class="history-panel" id="historyPanelKo"></div>
                 <div class="presets">
                     <label>프리셋：</label>
                     <button class="preset-btn" data-preset="kakao">📱 카카오톡</button>
                     <button class="preset-btn" data-preset="instagram">📸 인스타그램</button>
                     <button class="preset-btn" data-preset="webp">🌐 WebP 형식</button>
                     <button class="save-fav-btn" id="saveFavBtnKo">💾 설정 저장</button>
+                    <button class="copy-share-btn" id="copyShareBtnKo">🔗 공유 링크 복사</button>
                 </div>
                 <div class="actions">
-                    <button class="compress-btn" id="compressBtnKo" disabled>모두 압축</button>
-                    <button class="clear-btn" id="clearBtnKo" disabled>초기화</button>
-                    <button class="download-all-btn" id="downloadAllBtnKo" disabled>모두 다운로드</button>
-                    <button class="download-zip-btn" id="downloadZipBtnKo" disabled>📦 ZIP</button>
+                    <button class="compress-btn" id="compressBtnKo" disabled>먼저 이미지를 추가해 주세요</button>
+                    <button class="clear-btn" id="clearBtnKo" disabled>먼저 이미지를 추가해 주세요</button>
+                    <button class="download-all-btn" id="downloadAllBtnKo" disabled>먼저 이미지를 추가해 주세요</button>
+                    <button class="download-zip-btn" id="downloadZipBtnKo" disabled>먼저 이미지를 추가해 주세요</button>
                 </div>
                 <div class="progress-container" id="progressContainerKo">
                     <div class="progress-bar">
@@ -365,6 +397,7 @@
                 <div class="batch-result" id="batchResultKo"></div>
                 <button class="install-pwa-btn" id="installPwaBtnKo" style="display:none;" onclick="installPWA()">📲 앱 설치</button>
                 <div class="stats-panel" id="statsPanelKo"></div>
+                <div class="badge-panel" id="badgePanelKo"></div>
             </div>
         </div>
     </div>
@@ -376,6 +409,40 @@
             --success: #16a34a;
             --warning: #f59e0b;
             --danger: #dc2626;
+            /* Light mode colors */
+            --bg-primary: white;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f0fdf4;
+            --bg-hover: #f8f9ff;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --text-muted: #a0a0a0;
+            --border-color: #ddd;
+            --border-light: #eee;
+            --shadow-color: rgba(0,0,0,0.2);
+            --card-bg: white;
+            --input-bg: white;
+            --accent-blue: #4f46e5;
+            --accent-green: #10b981;
+            --accent-red: #fee2e2;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1e1e2f;
+            --bg-secondary: #252536;
+            --bg-tertiary: #1a2e1a;
+            --bg-hover: #1e1e2f;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --border-color: #3a3a4d;
+            --border-light: #3a3a4d;
+            --shadow-color: rgba(0,0,0,0.4);
+            --card-bg: #1e1e2f;
+            --input-bg: #2a2a3d;
+            --accent-blue: #6366f1;
+            --accent-green: #22c55e;
+            --accent-red: #2e1a1a;
         }
 
         * {
@@ -386,9 +453,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .lang-app {
@@ -407,10 +480,11 @@
             padding: 8px 12px;
             border: none;
             border-radius: 8px;
-            background: white;
+            background: var(--card-bg);
             font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px var(--shadow-color);
+            color: var(--text-primary);
         }
 
         .container {
@@ -434,25 +508,27 @@
         }
 
         .card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px var(--shadow-color);
+            transition: background 0.3s, box-shadow 0.3s;
         }
 
         .upload-area {
-            border: 3px dashed #ddd;
+            border: 3px dashed var(--border-color);
             border-radius: 12px;
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             margin-bottom: 15px;
+            background: var(--bg-primary);
         }
 
         .upload-area:hover {
             border-color: var(--primary);
-            background: #f8f9ff;
+            background: var(--bg-hover);
         }
 
         .upload-area.dragover {
@@ -509,7 +585,7 @@
         }
 
         .upload-text {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 16px;
         }
 
@@ -526,16 +602,19 @@
             max-height: 300px;
             overflow-y: auto;
             margin-bottom: 20px;
-            border: 1px solid #eee;
+            border: 1px solid var(--border-light);
             border-radius: 8px;
+            background: var(--bg-primary);
         }
 
         .file-item {
             display: flex;
             align-items: center;
             padding: 12px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-light);
             gap: 12px;
+            background: var(--bg-primary);
+            transition: background 0.3s;
         }
 
         .file-item:last-child {
@@ -543,11 +622,11 @@
         }
 
         .file-item.completed {
-            background: #f0fdf4;
+            background: var(--bg-tertiary);
         }
 
         .file-item.error {
-            background: #fef2f2;
+            background: var(--accent-red);
         }
 
         .file-thumb {
@@ -555,7 +634,7 @@
             height: 50px;
             object-fit: cover;
             border-radius: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
         }
 
         .file-info {
@@ -566,7 +645,7 @@
         .file-name {
             font-weight: 600;
             font-size: 14px;
-            color: #333;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -574,7 +653,7 @@
 
         .file-size {
             font-size: 12px;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 4px;
         }
 
@@ -590,9 +669,41 @@
             color: #92400e;
         }
 
+        [data-theme="dark"] .file-status.pending {
+            background: #3a3520;
+            color: #d4a106;
+        }
+
         .file-status.processing {
             background: #dbeafe;
             color: #1e40af;
+            animation: pulse 1.5s infinite;
+        }
+
+        [data-theme="dark"] .file-status.processing {
+            background: #1a2a4a;
+            color: #60a0ff;
+        }
+
+        .file-status.processing::after {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            margin-left: 6px;
+            animation: pulse-dot 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
         }
 
         .file-status.done {
@@ -619,6 +730,92 @@
             background: #fecaca;
         }
 
+        .file-download {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            background: #10b981;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .file-download:hover {
+            background: #059669;
+        }
+
+        /* File list header and batch operations */
+        .file-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 5px;
+        }
+
+        .file-list-select-all {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .file-list-select-all input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .batch-download-btn {
+            padding: 6px 12px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .batch-download-btn:hover {
+            background: #4338ca;
+        }
+
+        .batch-delete-btn {
+            padding: 6px 12px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .batch-delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        .file-checkbox {
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+        }
+
+        .file-checkbox input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .file-item.selected {
+            background: #f0f2ff;
+        }
+
         /* Settings */
         .settings {
             display: grid;
@@ -626,7 +823,7 @@
             gap: 15px;
             margin-bottom: 20px;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             border-radius: 12px;
         }
 
@@ -637,7 +834,7 @@
 
         .setting-group label {
             font-weight: 600;
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 8px;
             font-size: 13px;
         }
@@ -646,9 +843,11 @@
         .setting-group input[type="range"] {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-primary);
         }
 
         .quality-display {
@@ -676,9 +875,10 @@
 
         .preset-btn {
             padding: 8px 16px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            background: white;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             cursor: pointer;
             font-size: 13px;
             transition: all 0.2s;
@@ -754,7 +954,7 @@
 
         .progress-bar {
             height: 8px;
-            background: #eee;
+            background: var(--border-light);
             border-radius: 4px;
             overflow: hidden;
         }
@@ -764,12 +964,29 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             width: 0%;
             transition: width 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
         }
 
         .progress-text {
             text-align: center;
             margin-top: 10px;
-            color: #666;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -778,7 +995,7 @@
             display: none;
             margin-bottom: 20px;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             border-radius: 12px;
             text-align: center;
         }
@@ -794,10 +1011,10 @@
         .preview-info {
             margin-top: 10px;
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
         }
         .preview-info strong {
-            color: #333;
+            color: var(--text-primary);
         }
 
         /* Recommend Panel */
@@ -805,9 +1022,9 @@
             display: none;
             margin-bottom: 15px;
             padding: 15px;
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-light) 100%);
             border-radius: 12px;
-            border: 1px solid #a5b4fc;
+            border: 1px solid var(--accent-blue);
         }
         .recommend-panel.show {
             display: block;
@@ -815,7 +1032,7 @@
         .recommend-title {
             font-weight: 600;
             margin-bottom: 10px;
-            color: #4338ca;
+            color: var(--accent-blue);
         }
         .recommend-list {
             display: flex;
@@ -824,17 +1041,18 @@
         }
         .recommend-btn {
             padding: 8px 12px;
-            background: white;
-            border: 1px solid #a5b4fc;
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-blue);
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
+            color: var(--text-primary);
         }
         .recommend-btn:hover {
-            background: #4f46e5;
+            background: var(--accent-blue);
             color: white;
-            border-color: #4f46e5;
+            border-color: var(--accent-blue);
         }
         .recommend-btn:active, .recommend-btn.active {
             background: #4338ca;
@@ -845,16 +1063,16 @@
         .recommend-info {
             margin-top: 8px;
             font-size: 12px;
-            color: #666;
+            color: var(--text-secondary);
         }
 
         /* Batch Result */
         .batch-result {
             display: none;
             padding: 20px;
-            background: #f0fdf4;
+            background: var(--bg-tertiary);
             border-radius: 12px;
-            border: 1px solid #bbf7d0;
+            border: 1px solid var(--success);
             margin-bottom: 20px;
         }
 
@@ -871,7 +1089,7 @@
 
         .batch-stat {
             padding: 15px;
-            background: white;
+            background: var(--bg-primary);
             border-radius: 8px;
         }
 
@@ -929,6 +1147,248 @@
         .stats-label {
             color: #92400e;
             font-size: 11px;
+        }
+
+        /* Watermark Settings Panel */
+        .watermark-settings-panel {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-radius: 12px;
+            border: 1px solid #a5b4fc;
+        }
+        .watermark-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .watermark-enable-row {
+            display: flex;
+            align-items: center;
+        }
+        .watermark-toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4338ca;
+        }
+        .watermark-toggle-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .watermark-type-row {
+            display: flex;
+            gap: 20px;
+        }
+        .watermark-type-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #3730a3;
+        }
+        .watermark-text-row input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #a5b4fc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .watermark-text-row input[type="text"]:focus {
+            border-color: #6366f1;
+        }
+        .watermark-image-row {
+            display: flex;
+            gap: 10px;
+        }
+        .watermark-image-row button {
+            padding: 8px 16px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        .watermark-image-row button:hover {
+            background: #4f46e5;
+        }
+        .watermark-position-grid {
+            margin-top: 5px;
+        }
+        .position-grid-title {
+            font-size: 13px;
+            color: #4338ca;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .position-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .position-grid .pos-btn {
+            padding: 8px 4px;
+            background: white;
+            border: 1px solid #a5b4fc;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #4338ca;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .position-grid .pos-btn:hover {
+            background: #e0e7ff;
+        }
+        .position-grid .pos-btn.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+        .watermark-opacity-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .watermark-opacity-row label {
+            font-size: 13px;
+            color: #4338ca;
+        }
+        .watermark-opacity-row input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+        .watermark-preview-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .watermark-preview-row label {
+            font-size: 13px;
+            color: #4338ca;
+        }
+        #watermarkPreviewZh, #watermarkPreviewEn, #watermarkPreviewJa, #watermarkPreviewKo {
+            display: flex;
+            justify-content: center;
+        }
+        #watermarkPreviewZh canvas, #watermarkPreviewEn canvas, #watermarkPreviewJa canvas, #watermarkPreviewKo canvas {
+            border: 1px solid #a5b4fc;
+            border-radius: 8px;
+        }
+
+        /* Badge System */
+        .badge-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-radius: 12px;
+            justify-content: center;
+        }
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 80px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .badge-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .badge-icon {
+            font-size: 28px;
+        }
+        .badge-name {
+            font-size: 11px;
+            color: #6b7280;
+            text-align: center;
+        }
+        .badge-item.unlocked .badge-icon {
+            filter: none;
+        }
+        .badge-item.locked .badge-icon {
+            filter: grayscale(100%) opacity(0.5);
+        }
+        .badge-item.unlocked {
+            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+            border: 2px solid #fbbf24;
+        }
+        .badge-new {
+            position: relative;
+        }
+        .badge-new::after {
+            content: 'NEW';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 8px;
+            padding: 2px 5px;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .badge-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+            z-index: 9999;
+            animation: slideUp 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+        }
+        @keyframes slideUp {
+            from { bottom: -50px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(-50%) scale(0.8); }
+        }
+
+        /* Motivation Messages */
+        .motivation-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+            z-index: 9999;
+            animation: popIn 0.5s ease, fadeOut 0.5s ease 2s forwards;
+            text-align: center;
+            max-width: 300px;
+        }
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         /* Check-in System */
@@ -1004,6 +1464,26 @@
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
+        .save-preset-result-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f0a500 0%, #e08800 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-preset-result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(240, 165, 0, 0.3);
+        }
+
         /* Social Share Buttons */
         .social-share-btns {
             display: flex;
@@ -1034,6 +1514,130 @@
         .social-btn.whatsapp { background: #25d366; color: white; }
         .social-btn.weibo { background: #e6162d; color: white; }
         .social-btn:hover { transform: scale(1.1); }
+
+        /* Comparison Slider */
+        .comparison-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+        .comparison-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        .comparison-slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 8px;
+            user-select: none;
+        }
+        .comparison-slider-wrapper .comparison-original-img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .comparison-before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .comparison-before img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .comparison-slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: white;
+            cursor: ew-resize;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .comparison-slider-handle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .comparison-slider-handle::after {
+            content: '◀ ▶';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: #666;
+            white-space: nowrap;
+        }
+        .comparison-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        .comparison-savings-bar {
+            margin-top: 15px;
+            padding: 12px;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 8px;
+            border: 1px solid #6ee7b7;
+        }
+        .comparison-savings-bar strong {
+            color: #065f46;
+        }
+
+        /* EXIF Info */
+        .exif-info {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .orientation-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+        .orientation-fix-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .orientation-fix-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
 
         /* Watermark Settings */
         .watermark-settings {
@@ -1222,6 +1826,21 @@
             transform: translateY(-1px);
         }
 
+        /* Copy Share Button */
+        .copy-share-btn {
+            background: linear-gradient(135deg, #00c853 0%, #009624 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .copy-share-btn:hover {
+            transform: translateY(-1px);
+        }
+
         /* Toast */
         .toast {
             position: fixed;
@@ -1240,6 +1859,193 @@
         .toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
+        }
+
+        /* Dark mode styles */
+        [data-theme="dark"] .card {
+            background: #1e1e2f;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .settings {
+            background: #252536;
+        }
+
+        [data-theme="dark"] .setting-group label {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .setting-group select,
+        [data-theme="dark"] .setting-group input[type="range"] {
+            background: #2a2a3d;
+            border-color: #3a3a4d;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .presets label {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .preset-btn {
+            background: #252536;
+            border-color: #3a3a4d;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .preset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        [data-theme="dark"] .file-list {
+            border-color: #3a3a4d;
+        }
+
+        [data-theme="dark"] .file-item {
+            background: #252536;
+            border-color: #3a3a4d;
+        }
+
+        [data-theme="dark"] .file-item.completed {
+            background: #1a2e1a;
+        }
+
+        [data-theme="dark"] .file-item.error {
+            background: #2e1a1a;
+        }
+
+        [data-theme="dark"] .file-name {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .file-size {
+            color: #a0a0a0;
+        }
+
+        [data-theme="dark"] .batch-result {
+            background: #1a2e1a;
+            border-color: #2e5a3a;
+        }
+
+        [data-theme="dark"] .comparison-container {
+            background: #252536;
+        }
+
+        [data-theme="dark"] .comparison-title {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .recommend-panel {
+            background: linear-gradient(135deg, #2a2a4a 0%, #3a3a5a 100%);
+            border-color: #5a5a8a;
+        }
+
+        [data-theme="dark"] .recommend-title {
+            color: #c0c0ff;
+        }
+
+        [data-theme="dark"] .preview-panel {
+            background: #252536;
+        }
+
+        [data-theme="dark"] .preview-info {
+            color: #b0b0b0;
+        }
+
+        [data-theme="dark"] .preview-info strong {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .favorites-panel {
+            background: #2e2a1a;
+            border-color: #6a5a3a;
+        }
+
+        [data-theme="dark"] .favorites-title {
+            color: #d0a060;
+        }
+
+        [data-theme="dark"] .history-panel {
+            background: #1a2a3a;
+            border-color: #3a5a7a;
+        }
+
+        [data-theme="dark"] .history-title {
+            color: #60a0d0;
+        }
+
+        [data-theme="dark"] .history-item {
+            background: #252536;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .checkin-panel {
+            background: #2a2a1a;
+            border-color: #6a5a2a;
+        }
+
+        [data-theme="dark"] .upload-area {
+            border-color: #4a4a5d;
+        }
+
+        [data-theme="dark"] .upload-area:hover {
+            background: #1e1e2f;
+        }
+
+        [data-theme="dark"] .upload-text {
+            color: #a0a0a0;
+        }
+
+        [data-theme="dark"] .stats-panel {
+            background: linear-gradient(135deg, #2a2a1a 0%, #3a3a2a 100%);
+        }
+
+        [data-theme="dark"] .stats-value {
+            color: #d0a030;
+        }
+
+        [data-theme="dark"] .stats-label {
+            color: #b08040;
+        }
+
+        [data-theme="dark"] .badge-panel {
+            background: linear-gradient(135deg, #2a2a3a 0%, #3a3a4a 100%);
+        }
+
+        [data-theme="dark"] .badge-item.unlocked {
+            background: linear-gradient(135deg, #3a3a2a 0%, #4a4a3a 100%);
+            border-color: #d0a030;
+        }
+
+        [data-theme="dark"] .badge-item.locked .badge-icon {
+            filter: grayscale(100%) opacity(0.3);
+        }
+
+        [data-theme="dark"] .comparison-savings-bar {
+            background: linear-gradient(135deg, #1a3a2a 0%, #2a5a4a 100%);
+            border-color: #3a7a5a;
+        }
+
+        [data-theme="dark"] .comparison-savings-bar strong {
+            color: #60d090;
+        }
+
+        [data-theme="dark"] .dark-mode-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Dark mode toggle button */
+        .dark-mode-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            margin-right: 10px;
         }
 
         /* Stats */
@@ -1295,9 +2101,12 @@
                 totalCompressed: '压缩后大小',
                 totalSaved: '总共节省',
                 noFiles: '请先添加图片',
+                noPendingFiles: '没有待压缩的文件',
                 compressFail: '压缩失败',
                 downloadStart: '下载已开始!',
+                clickDownload: '点击下载',
                 creatingZip: '正在创建ZIP...',
+                compressFirst: '请先完成压缩',
                 downloadComplete: 'ZIP下载完成!',
                 clearConfirm: '确定清空列表吗?',
                 fileSelected: '已选择',
@@ -1329,6 +2138,7 @@
                 shareOnLinkedIn: '分享到LinkedIn',
                 shareOnWhatsApp: '分享到WhatsApp',
                 shareLinkCopied: '分享链接已复制',
+                urlPresetLoaded: 'URL预设已加载',
                 checkInAlready: '今日已签到',
                 checkInDays: '天',
                 points: '积分',
@@ -1342,9 +2152,19 @@
                 watermarkLockHint: '天签到后解锁',
                 watermarkTitle: '🖊️ 水印设置',
                 watermarkPlaceholder: '输入水印文字',
+                watermarkTypeText: '文字水印',
+                watermarkTypeImage: '图片水印',
+                watermarkImageSelect: '选择水印图片',
+                watermarkImageClear: '清除图片',
+                watermarkPosition: '水印位置',
+                positionTL: '左上', positionTC: '上中', positionTR: '右上',
+                positionML: '左中', positionMC: '居中', positionMR: '右中',
+                positionBL: '左下', positionBC: '下中', positionBR: '右下',
                 opacity: '透明度',
                 applyWatermark: '应用水印',
                 watermarkSaved: '水印已保存！',
+                previewTitle: '预览',
+                enableWatermark: '启用水印',
                 checkInSuccess: '签到成功！',
                 shareResult: '📤 分享结果',
                 formatNotSupported: '格式不支持：',
@@ -1368,7 +2188,41 @@
                     webp: { message: 'WebP格式预设已应用', quality: 80, maxWidth: 1920, format: 'webp' }
                 },
                 recommendTitle: '✨ 推荐设置',
-                recommendInfo: '根据图片尺寸推荐'
+                recommendInfo: '根据图片尺寸推荐',
+                exifDimensions: '尺寸',
+                exifOrientation: '方向',
+                fixOrientation: '修复原始方向',
+                fixOrientationDesc: '自动旋转图片以修正方向问题',
+                comparisonTitle: '🔍 压缩对比',
+                comparisonOriginal: '原始',
+                comparisonCompressed: '压缩后',
+                savingsRate: '节省比例',
+                shortcutsTitle: '⌨️ 快捷键',
+                shortcutPaste: '粘贴图片',
+                shortcutCompress: '开始压缩',
+                shortcutClear: '清空列表',
+                shortcutCopy: '复制结果',
+                clipboardPasted: '已从剪贴板添加图片',
+                clipboardEmpty: '剪贴板为空或不含图片',
+                darkMode: '深色模式',
+                lightMode: '浅色模式',
+                followSystem: '跟随系统',
+                selectAll: '全选',
+                downloadSelected: '下载选中',
+                saveAsPreset: '保存为预设',
+                presetNamePrompt: '请输入预设名称：',
+                myPreset: '我的预设',
+                badgeUnlocked: '徽章解锁！',
+                badgeFirstUse: '初次使用',
+                badgeCompress10: '压缩10张',
+                badgeCompress50: '压缩50张',
+                badgeCompress100: '压缩100张',
+                badgeSaved100MB: '节省100MB',
+                badgeSaved500MB: '节省500MB',
+                badgeSaved1GB: '节省1GB',
+                badgeStreak7: '连续7天',
+                badgeStreak30: '连续30天',
+                noBadgesYet: '开始压缩来获得徽章！'
             },
             'en': {
                 pageTitle: 'Free Online Image Compressor - Batch Compress JPEG/PNG/WebP/HEIC',
@@ -1387,9 +2241,12 @@
                 totalCompressed: 'Compressed Size',
                 totalSaved: 'Total Saved',
                 noFiles: 'Please add images first',
+                noPendingFiles: 'No files to compress',
                 compressFail: 'Compression failed',
                 downloadStart: 'Download started!',
+                clickDownload: 'Click to download',
                 creatingZip: 'Creating ZIP...',
+                compressFirst: 'Please complete compression first',
                 downloadComplete: 'ZIP downloaded!',
                 clearConfirm: 'Clear all files?',
                 fileSelected: 'selected',
@@ -1421,6 +2278,7 @@
                 shareOnLinkedIn: 'Share on LinkedIn',
                 shareOnWhatsApp: 'Share on WhatsApp',
                 shareLinkCopied: 'Share link copied',
+                urlPresetLoaded: 'URL preset loaded',
                 checkInAlready: 'Already checked in today',
                 checkInDays: 'days',
                 points: 'pts',
@@ -1434,9 +2292,19 @@
                 watermarkLockHint: 'days to unlock',
                 watermarkTitle: '🖊️ Watermark Settings',
                 watermarkPlaceholder: 'Enter watermark text',
+                watermarkTypeText: 'Text Watermark',
+                watermarkTypeImage: 'Image Watermark',
+                watermarkImageSelect: 'Select Watermark Image',
+                watermarkImageClear: 'Clear Image',
+                watermarkPosition: 'Position',
+                positionTL: 'Top Left', positionTC: 'Top Center', positionTR: 'Top Right',
+                positionML: 'Mid Left', positionMC: 'Center', positionMR: 'Mid Right',
+                positionBL: 'Bot Left', positionBC: 'Bot Center', positionBR: 'Bot Right',
                 opacity: 'Opacity',
                 applyWatermark: 'Apply Watermark',
                 watermarkSaved: 'Watermark saved!',
+                previewTitle: 'Preview',
+                enableWatermark: 'Enable Watermark',
                 checkInSuccess: 'Check-in success!',
                 shareResult: '📤 Share Result',
                 formatNotSupported: 'Format not supported: ',
@@ -1457,7 +2325,41 @@
                     webp: { message: 'WebP preset applied', quality: 80, maxWidth: 1920, format: 'webp' }
                 },
                 recommendTitle: '✨ Recommended Settings',
-                recommendInfo: 'Based on image dimensions'
+                recommendInfo: 'Based on image dimensions',
+                exifDimensions: 'Dimensions',
+                exifOrientation: 'Orientation',
+                fixOrientation: 'Fix Orientation',
+                fixOrientationDesc: 'Auto-rotate to correct orientation',
+                comparisonTitle: '🔍 Comparison',
+                comparisonOriginal: 'Original',
+                comparisonCompressed: 'Compressed',
+                savingsRate: 'Savings',
+                shortcutsTitle: '⌨️ Shortcuts',
+                shortcutPaste: 'Paste Image',
+                shortcutCompress: 'Compress',
+                shortcutClear: 'Clear List',
+                shortcutCopy: 'Copy Result',
+                clipboardPasted: 'Image added from clipboard',
+                clipboardEmpty: 'Clipboard empty or no image',
+                darkMode: 'Dark Mode',
+                lightMode: 'Light Mode',
+                followSystem: 'Follow System',
+                selectAll: 'Select All',
+                downloadSelected: 'Download Selected',
+                saveAsPreset: 'Save as Preset',
+                presetNamePrompt: 'Enter preset name:',
+                myPreset: 'My Preset',
+                badgeUnlocked: 'Badge Unlocked!',
+                badgeFirstUse: 'First Use',
+                badgeCompress10: '10 Compressions',
+                badgeCompress50: '50 Compressions',
+                badgeCompress100: '100 Compressions',
+                badgeSaved100MB: 'Saved 100MB',
+                badgeSaved500MB: 'Saved 500MB',
+                badgeSaved1GB: 'Saved 1GB',
+                badgeStreak7: '7-Day Streak',
+                badgeStreak30: '30-Day Streak',
+                noBadgesYet: 'Start compressing to earn badges!'
             },
             'ja': {
                 pageTitle: '無料オンライン画像圧縮ツール - JPEG/PNG/WebP/HEIC対応',
@@ -1476,9 +2378,12 @@
                 totalCompressed: '圧縮後サイズ',
                 totalSaved: '合計節約',
                 noFiles: '画像を追加してください',
+                noPendingFiles: '圧縮するファイルがありません',
                 compressFail: '圧縮に失敗しました',
                 downloadStart: 'ダウンロードを開始しました!',
+                clickDownload: 'クリックしてダウンロード',
                 creatingZip: 'ZIPを作成中...',
+                compressFirst: 'まず圧縮を完了してください',
                 downloadComplete: 'ZIPのダウンロードが完了しました!',
                 clearConfirm: 'すべてのファイルをクリアしますか?',
                 fileSelected: '選択済み',
@@ -1510,6 +2415,7 @@
                 shareOnLinkedIn: 'LinkedInで共有',
                 shareOnWhatsApp: 'WhatsAppで共有',
                 shareLinkCopied: '共有リンクがコピーされました',
+                urlPresetLoaded: 'URLプリセットがロードされました',
                 totalFilesLabel: 'ファイル数',
                 totalSavedLabel: '節約合計',
                 checkInAlready: '今日はすでにチェックインしました',
@@ -1525,9 +2431,19 @@
                 watermarkLockHint: '日後に解除',
                 watermarkTitle: '🖊️ 透かし設定',
                 watermarkPlaceholder: '透かしテキストを入力',
+                watermarkTypeText: 'テキスト透かし',
+                watermarkTypeImage: '画像透かし',
+                watermarkImageSelect: '透かし画像を選択',
+                watermarkImageClear: '画像をクリア',
+                watermarkPosition: '位置',
+                positionTL: '左上', positionTC: '上', positionTR: '右上',
+                positionML: '左', positionMC: '中央', positionMR: '右',
+                positionBL: '左下', positionBC: '下', positionBR: '右下',
                 opacity: '不透明度',
                 applyWatermark: '透かしを適用',
                 watermarkSaved: '透かしが保存されました！',
+                previewTitle: 'プレビュー',
+                enableWatermark: '透かしを有効',
                 checkInSuccess: 'チェックイン成功！',
                 shareResult: '📤 結果を共有',
                 formatNotSupported: 'このフォーマットはサポートされていません：',
@@ -1546,7 +2462,41 @@
                     webp: { message: 'WebPプリセット適用', quality: 80, maxWidth: 1920, format: 'webp' }
                 },
                 recommendTitle: '✨ 推奨設定',
-                recommendInfo: '画像サイズに基づくおすすめ'
+                recommendInfo: '画像サイズに基づくおすすめ',
+                exifDimensions: 'サイズ',
+                exifOrientation: '方向',
+                fixOrientation: '向きを修正',
+                fixOrientationDesc: '自動的に回転して向きを修正',
+                comparisonTitle: '🔍 比較',
+                comparisonOriginal: '元',
+                comparisonCompressed: '圧縮後',
+                savingsRate: '節約率',
+                shortcutsTitle: '⌨️ ショートカット',
+                shortcutPaste: '画像を貼り付け',
+                shortcutCompress: '圧縮',
+                shortcutClear: 'クリア',
+                shortcutCopy: '結果をコピー',
+                clipboardPasted: 'クリップボードから画像を追加',
+                clipboardEmpty: 'クリップボードは空です',
+                darkMode: 'ダークモード',
+                lightMode: 'ライトモード',
+                followSystem: 'システムに従う',
+                selectAll: 'すべて選択',
+                downloadSelected: '選択をダウンロード',
+                saveAsPreset: 'プリセットとして保存',
+                presetNamePrompt: 'プリセット名を入力：',
+                myPreset: 'マイプリセット',
+                badgeUnlocked: 'バッジ獲得！',
+                badgeFirstUse: '初回使用',
+                badgeCompress10: '10回圧縮',
+                badgeCompress50: '50回圧縮',
+                badgeCompress100: '100回圧縮',
+                badgeSaved100MB: '100MB节省',
+                badgeSaved500MB: '500MB节省',
+                badgeSaved1GB: '1GB节省',
+                badgeStreak7: '7日連続',
+                badgeStreak30: '30日連続',
+                noBadgesYet: '圧縮してバッジを獲得しよう！'
             },
             'ko': {
                 pageTitle: '무료 온라인 이미지 압축 도구 - JPEG/PNG/WebP/HEIC 지원',
@@ -1565,14 +2515,17 @@
                 totalCompressed: '압축 후 크기',
                 totalSaved: '총 절약',
                 noFiles: '먼저 이미지를 추가해 주세요',
+                noPendingFiles: '압축할 파일이 없습니다',
                 compressFail: '압축 실패',
                 downloadStart: '다운로드를 시작했습니다!',
+                clickDownload: '클릭하여 다운로드',
                 creatingZip: 'ZIP 생성 중...',
+                compressFirst: '먼저 압축을 완료해 주세요',
                 downloadComplete: 'ZIP 다운로드 완료!',
                 clearConfirm: '모든 파일을 초기화하시겠습니까?',
                 fileSelected: '선택됨',
-                favoritesTitle: '⭐ 我的收藏',
-                favoritesFull: '收藏이 가득 찼습니다 (최대 10개)',
+                favoritesTitle: '⭐ 내 즐겨찾기',
+                favoritesFull: '즐겨찾기가 가득 찼습니다 (최대 10개)',
                 favoritesExists: '이미 존재합니다',
                 favoritesSaved: '저장됨: ',
                 renamePrompt: '새 이름 입력:',
@@ -1599,6 +2552,7 @@
                 shareOnLinkedIn: 'LinkedIn에서 공유',
                 shareOnWhatsApp: 'WhatsApp에서 공유',
                 shareLinkCopied: '공유 링크가 복사됨',
+                urlPresetLoaded: 'URL 프리셋이 로드됨',
                 checkInAlready: '오늘은 이미 체크인했습니다',
                 checkInDays: '일',
                 points: '포인트',
@@ -1612,9 +2566,19 @@
                 watermarkLockHint: '일 후 잠금 해제',
                 watermarkTitle: '🖊️ 워터마크 설정',
                 watermarkPlaceholder: '워터마크 텍스트 입력',
+                watermarkTypeText: '텍스트 워터마크',
+                watermarkTypeImage: '이미지 워터마크',
+                watermarkImageSelect: '워터마크 이미지 선택',
+                watermarkImageClear: '이미지 지우기',
+                watermarkPosition: '위치',
+                positionTL: '좌상', positionTC: '상', positionTR: '우상',
+                positionML: '좌', positionMC: '중앙', positionMR: '우',
+                positionBL: '좌하', positionBC: '하', positionBR: '우하',
                 opacity: '불투명도',
                 applyWatermark: '워터마크 적용',
                 watermarkSaved: '워터마크가 저장되었습니다!',
+                previewTitle: '미리보기',
+                enableWatermark: '워터마크 활성화',
                 checkInSuccess: '체크인 성공!',
                 shareResult: '📤 결과 공유',
                 formatNotSupported: '지원되지 않는 형식: ',
@@ -1635,7 +2599,41 @@
                     webp: { message: 'WebP 프리셋 적용', quality: 80, maxWidth: 1920, format: 'webp' }
                 },
                 recommendTitle: '✨ 권장 설정',
-                recommendInfo: '이미지 크기에 기반한 추천'
+                recommendInfo: '이미지 크기에 기반한 추천',
+                exifDimensions: '크기',
+                exifOrientation: '방향',
+                fixOrientation: '방향 수정',
+                fixOrientationDesc: '자동 회전하여 방향 수정',
+                comparisonTitle: '🔍 비교',
+                comparisonOriginal: '원본',
+                comparisonCompressed: '압축 후',
+                savingsRate: '절약률',
+                shortcutsTitle: '⌨️ 단축키',
+                shortcutPaste: '이미지 붙여넣기',
+                shortcutCompress: '압축',
+                shortcutClear: '초기화',
+                shortcutCopy: '결과 복사',
+                clipboardPasted: '클립보드에서 이미지 추가됨',
+                clipboardEmpty: '클립보드가 비어 있거나 이미지가 없습니다',
+                darkMode: '다크 모드',
+                lightMode: '라이트 모드',
+                followSystem: '시스템 설정 따르기',
+                selectAll: '전체 선택',
+                downloadSelected: '선택 다운로드',
+                saveAsPreset: '프리셋으로 저장',
+                presetNamePrompt: '프리셋 이름 입력：',
+                myPreset: '내 프리셋',
+                badgeUnlocked: '뱃지 획득！',
+                badgeFirstUse: '첫 사용',
+                badgeCompress10: '10회 압축',
+                badgeCompress50: '50회 압축',
+                badgeCompress100: '100회 압축',
+                badgeSaved100MB: '100MB 절약',
+                badgeSaved500MB: '500MB 절약',
+                badgeSaved1GB: '1GB 절약',
+                badgeStreak7: '7일 연속',
+                badgeStreak30: '30일 연속',
+                noBadgesYet: '압축을 시작하여 뱃지를 획득하세요！'
             }
         };
 
@@ -1644,6 +2642,13 @@
         let fileQueue = [];
         let compressedFiles = [];
         let isCompressing = false;
+        let fixOrientationEnabled = localStorage.getItem('fixOrientation') === 'true';
+
+        // Language suffix helper - 减少重复代码
+        const LANG_SUFFIX_MAP = { 'zh-CN': 'Zh', 'en': 'En', 'ja': 'Ja', 'ko': 'Ko' };
+        function getSuffix(lang) {
+            return LANG_SUFFIX_MAP[lang] || 'Zh';
+        }
 
         // Watermark system
         const WATERMARK_KEY = 'image-compressor-watermark';
@@ -1680,9 +2685,7 @@
         }
 
         function renderStats() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const panel = document.getElementById('statsPanel' + suffix);
             if (!panel) return;
             const stats = getStats();
@@ -1702,14 +2705,137 @@
             `;
         }
 
-        function isWatermarkUnlocked() {
+        
+        // Badge System
+        const BADGE_KEY = 'image-compressor-badges';
+        const STREAK_KEY = 'image-compressor-streak';
+        const LAST_USE_KEY = 'image-compressor-last-use';
+
+        const BADGES = {
+            'firstUse': { icon: '🌟', nameKey: 'badgeFirstUse', condition: (s) => s.totalFiles >= 1 },
+            'compress10': { icon: '📊', nameKey: 'badgeCompress10', condition: (s) => s.totalFiles >= 10 },
+            'compress50': { icon: '🏆', nameKey: 'badgeCompress50', condition: (s) => s.totalFiles >= 50 },
+            'compress100': { icon: '💯', nameKey: 'badgeCompress100', condition: (s) => s.totalFiles >= 100 },
+            'saved100MB': { icon: '💾', nameKey: 'badgeSaved100MB', condition: (s) => s.totalSaved >= 100 * 1024 * 1024 },
+            'saved500MB': { icon: '📦', nameKey: 'badgeSaved500MB', condition: (s) => s.totalSaved >= 500 * 1024 * 1024 },
+            'saved1GB': { icon: '🎯', nameKey: 'badgeSaved1GB', condition: (s) => s.totalSaved >= 1024 * 1024 * 1024 },
+            'streak7': { icon: '🔥', nameKey: 'badgeStreak7', condition: (s, streak) => streak >= 7 },
+            'streak30': { icon: '⚡', nameKey: 'badgeStreak30', condition: (s, streak) => streak >= 30 }
+        };
+
+        function getBadges() {
+            try {
+                return JSON.parse(localStorage.getItem(BADGE_KEY)) || {};
+            } catch { return {}; }
+        }
+
+        function saveBadges(badges) {
+            localStorage.setItem(BADGE_KEY, JSON.stringify(badges));
+        }
+
+        function getStreak() {
+            try {
+                const data = JSON.parse(localStorage.getItem(STREAK_KEY)) || { count: 0, lastDate: null };
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                if (data.lastDate === today) return data.count;
+                if (data.lastDate === yesterday) {
+                    const newCount = data.count + 1;
+                    localStorage.setItem(STREAK_KEY, JSON.stringify({ count: newCount, lastDate: today }));
+                    return newCount;
+                }
+                localStorage.setItem(STREAK_KEY, JSON.stringify({ count: 1, lastDate: today }));
+                return 1;
+            } catch { return 1; }
+        }
+
+        function recordUse() {
+            localStorage.setItem(LAST_USE_KEY, Date.now().toString());
+        }
+
+        function checkAndUnlockBadges() {
+            const stats = getStats();
+            const streak = getStreak();
+            const badges = getBadges();
+            const newBadges = [];
+
+            Object.entries(BADGES).forEach(([id, badge]) => {
+                if (!badges[id] && badge.condition(stats, streak)) {
+                    badges[id] = { unlockedAt: Date.now() };
+                    newBadges.push(id);
+                }
+            });
+
+            if (newBadges.length > 0) {
+                saveBadges(badges);
+                newBadges.forEach(id => showBadgeToast(id));
+            }
+            renderBadges();
+        }
+
+        function renderBadges() {
+            const suffix = getSuffix(currentLang);
+            const panel = document.getElementById('badgePanel' + suffix);
+            if (!panel) return;
+
+            const badges = getBadges();
+            const stats = getStats();
+            const streak = getStreak();
+
+            let html = '';
+            Object.entries(BADGES).forEach(([id, badge]) => {
+                const unlocked = badges[id];
+                const isNew = unlocked && (Date.now() - unlocked.unlockedAt < 86400000 * 7);
+                html += '<div class="badge-item ' + (unlocked ? 'unlocked' : 'locked') + (isNew ? ' badge-new' : '') + '" title="' + (unlocked ? t(badge.nameKey) : '???') + '">' +
+                    '<div class="badge-icon">' + badge.icon + '</div>' +
+                    '<div class="badge-name">' + (t(badge.nameKey) || id) + '</div>' +
+                '</div>';
+            });
+
+            panel.innerHTML = html || '<div style="color:#6b7280;font-size:12px">' + (t('noBadgesYet') || 'Start compressing to earn badges!') + '</div>';
+        }
+
+        function showBadgeToast(badgeId) {
+            const badge = BADGES[badgeId];
+            if (!badge) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'badge-toast';
+            toast.innerHTML = badge.icon + ' ' + (t('badgeUnlocked') || 'Badge Unlocked!') + '<br><small>' + t(badge.nameKey) + '</small>';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        const MOTIVATION_MESSAGES = {
+            'zh-CN': ['太棒了！继续加油！', '压缩成功，节省空间！', '做得很好！', '继续保持！', '你真棒！'],
+            'en': ['Awesome! Keep going!', 'Compression successful!', 'Great job!', 'Keep it up!', 'You rock!'],
+            'ja': ['素晴らしい！続けて！', '圧縮成功！', 'よくできました！', 'この調子で！', 'すごい！'],
+            'ko': ['대단해! 계속 해봐!', '압축 성공!', '잘했어요!', '계속해서 해봐!', '너무 멋져!']
+        };
+
+        function showMotivationToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'motivation-toast';
+            toast.textContent = message || MOTIVATION_MESSAGES[currentLang][Math.floor(Math.random() * 5)];
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+function isWatermarkUnlocked() {
             return true; // Always unlocked without check-in system
         }
 
         function getWatermarkSettings() {
             try {
-                return JSON.parse(localStorage.getItem(WATERMARK_KEY)) || { text: '', position: 'br', opacity: 0.5 };
-            } catch { return { text: '', position: 'br', opacity: 0.5 }; }
+                return JSON.parse(localStorage.getItem(WATERMARK_KEY)) || { 
+                    enabled: false,
+                    type: 'text', 
+                    text: '', 
+                    imageData: '', 
+                    position: 'br', 
+                    opacity: 0.5 
+                };
+            } catch { return { enabled: false, type: 'text', text: '', imageData: '', position: 'br', opacity: 0.5 }; }
         }
 
         function saveWatermarkSettings(settings) {
@@ -1719,28 +2845,51 @@
         async function applyWatermark(canvas, file) {
             if (!isWatermarkUnlocked()) return canvas;
             const settings = getWatermarkSettings();
-            if (!settings.text) return canvas;
-
+            if (!settings.enabled) return canvas;
+            
             const ctx = canvas.getContext('2d');
-            const fontSize = Math.max(canvas.width, canvas.height) * 0.03;
             ctx.globalAlpha = settings.opacity;
-            ctx.font = `${fontSize}px Arial`;
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-
-            let x, y;
+            
+            let x, y, textAlign = 'left', baseline = 'top';
+            
+            // Calculate position based on 9-grid
+            const padding = 20;
+            const size = Math.max(canvas.width, canvas.height) * 0.05;
+            
             switch (settings.position) {
-                case 'tl': x = 20; y = 20 + fontSize; break;
-                case 'tr': x = canvas.width - 20; y = 20 + fontSize; ctx.textAlign = 'right'; break;
-                case 'bl': x = 20; y = canvas.height - 20; break;
-                case 'br': x = canvas.width - 20; y = canvas.height - 20; ctx.textAlign = 'right'; break;
-                default: x = canvas.width - 20; y = canvas.height - 20; ctx.textAlign = 'right';
+                case 'tl': x = padding; y = padding; break;
+                case 'tc': x = canvas.width / 2; y = padding; textAlign = 'center'; break;
+                case 'tr': x = canvas.width - padding; y = padding; textAlign = 'right'; break;
+                case 'ml': x = padding; y = canvas.height / 2; break;
+                case 'mc': x = canvas.width / 2; y = canvas.height / 2; textAlign = 'center'; break;
+                case 'mr': x = canvas.width - padding; y = canvas.height / 2; textAlign = 'right'; break;
+                case 'bl': x = padding; y = canvas.height - padding; baseline = 'bottom'; break;
+                case 'bc': x = canvas.width / 2; y = canvas.height - padding; textAlign = 'center'; baseline = 'bottom'; break;
+                case 'br': x = canvas.width - padding; y = canvas.height - padding; textAlign = 'right'; baseline = 'bottom'; break;
+                default: x = canvas.width - padding; y = canvas.height - padding; textAlign = 'right'; baseline = 'bottom';
             }
-
-            ctx.strokeText(settings.text, x, y);
-            ctx.fillText(settings.text, x, y);
+            
+            ctx.textAlign = textAlign;
+            ctx.textBaseline = baseline;
+            
+            if (settings.type === 'text' && settings.text) {
+                const fontSize = Math.max(canvas.width, canvas.height) * 0.03;
+                ctx.font = fontSize + 'px Arial';
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                ctx.lineWidth = fontSize * 0.1;
+                ctx.strokeText(settings.text, x, y);
+                ctx.fillText(settings.text, x, y);
+            } else if (settings.type === 'image' && settings.imageData) {
+                const img = new Image();
+                img.src = settings.imageData;
+                await new Promise((resolve) => { img.onload = resolve; });
+                const imgWidth = size;
+                const imgHeight = (img.height / img.width) * imgWidth;
+                ctx.drawImage(img, x - imgWidth/2, y - imgHeight/2, imgWidth, imgHeight);
+            }
+            
             ctx.globalAlpha = 1;
-
             return canvas;
         }
 
@@ -1749,10 +2898,13 @@
         // Initialize
         function init() {
             detectBrowserLanguage();
+            initDarkMode();
             setupEventListeners();
             updateUI();
             renderFavorites();
             renderStats();
+            renderBadges();
+            renderWatermarkSettings();
             initDB().then(() => renderHistory()).catch(() => {});
             registerPWA();
             loadSettingsFromURL();
@@ -1773,15 +2925,211 @@
         }
 
         function saveWatermarkText() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const input = document.getElementById('watermarkText' + suffix);
             if (!input) return;
             const settings = getWatermarkSettings();
             settings.text = input.value;
+            settings.enabled = true;
             saveWatermarkSettings(settings);
             showToast(t('watermarkSaved') || 'Watermark saved!');
+            renderWatermarkSettings();
+            updateWatermarkPreview();
+        }
+
+        function setWatermarkType(type) {
+            const settings = getWatermarkSettings();
+            settings.type = type;
+            saveWatermarkSettings(settings);
+            renderWatermarkSettings();
+            updateWatermarkPreview();
+        }
+
+        function toggleWatermark(enabled) {
+            const settings = getWatermarkSettings();
+            settings.enabled = enabled;
+            saveWatermarkSettings(settings);
+            updateWatermarkPreview();
+        }
+
+        function selectWatermarkImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const settings = getWatermarkSettings();
+                    settings.imageData = evt.target.result;
+                    settings.type = 'image';
+                    settings.enabled = true;
+                    saveWatermarkSettings(settings);
+                    renderWatermarkSettings();
+                    updateWatermarkPreview();
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function clearWatermarkImage() {
+            const settings = getWatermarkSettings();
+            settings.imageData = '';
+            settings.enabled = false;
+            saveWatermarkSettings(settings);
+            renderWatermarkSettings();
+            updateWatermarkPreview();
+        }
+
+        function updateWatermarkPreview() {
+            const suffix = getSuffix(currentLang);
+            const preview = document.getElementById('watermarkPreview' + suffix);
+            if (!preview) return;
+
+            const settings = getWatermarkSettings();
+            const size = 120;
+            preview.innerHTML = '';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            for (let i = 0; i < size; i += 10) {
+                for (let j = 0; j < size; j += 10) {
+                    ctx.fillStyle = ((i + j) / 10) % 2 === 0 ? '#eee' : '#ccc';
+                    ctx.fillRect(i, j, 10, 10);
+                }
+            }
+
+            if (settings.enabled) {
+                ctx.globalAlpha = settings.opacity;
+
+                let x, y, textAlign = 'center', baseline = 'middle';
+                const padding = 10;
+                const fontSize = 12;
+
+                switch (settings.position) {
+                    case 'tl': x = padding; y = padding; textAlign = 'left'; baseline = 'top'; break;
+                    case 'tc': x = size/2; y = padding; textAlign = 'center'; baseline = 'top'; break;
+                    case 'tr': x = size - padding; y = padding; textAlign = 'right'; baseline = 'top'; break;
+                    case 'ml': x = padding; y = size/2; textAlign = 'left'; baseline = 'middle'; break;
+                    case 'mc': x = size/2; y = size/2; textAlign = 'center'; baseline = 'middle'; break;
+                    case 'mr': x = size - padding; y = size/2; textAlign = 'right'; baseline = 'middle'; break;
+                    case 'bl': x = padding; y = size - padding; textAlign = 'left'; baseline = 'bottom'; break;
+                    case 'bc': x = size/2; y = size - padding; textAlign = 'center'; baseline = 'bottom'; break;
+                    case 'br': x = size - padding; y = size - padding; textAlign = 'right'; baseline = 'bottom'; break;
+                    default: x = size - padding; y = size - padding; textAlign = 'right'; baseline = 'bottom';
+                }
+
+                ctx.textAlign = textAlign;
+                ctx.textBaseline = baseline;
+
+                if (settings.type === 'text' && settings.text) {
+                    ctx.font = fontSize + 'px Arial';
+                    ctx.fillStyle = 'white';
+                    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeText(settings.text, x, y);
+                    ctx.fillText(settings.text, x, y);
+                } else if (settings.type === 'image' && settings.imageData) {
+                    const img = new Image();
+                    img.src = settings.imageData;
+                    const imgSize = 30;
+                    ctx.drawImage(img, x - imgSize/2, y - imgSize/2, imgSize, imgSize);
+                }
+            }
+
+            preview.appendChild(canvas);
+        }
+
+        function renderWatermarkSettings() {
+            const suffix = getSuffix(currentLang);
+            const container = document.getElementById('watermarkSettings' + suffix);
+            if (!container) return;
+
+            const settings = getWatermarkSettings();
+            const t_opacity = t('opacity');
+            const t_enable = t('enableWatermark');
+            const t_type_text = t('watermarkTypeText');
+            const t_type_image = t('watermarkTypeImage');
+            const t_placeholder = t('watermarkPlaceholder');
+            const t_img_select = t('watermarkImageSelect');
+            const t_img_clear = t('watermarkImageClear');
+            const t_position = t('watermarkPosition');
+            const t_preview = t('previewTitle');
+
+            const posLabels = {
+                tl: t('positionTL'), tc: t('positionTC'), tr: t('positionTR'),
+                ml: t('positionML'), mc: t('positionMC'), mr: t('positionMR'),
+                bl: t('positionBL'), bc: t('positionBC'), br: t('positionBR')
+            };
+
+            let html = '<div class="watermark-section">';
+            html += '<div class="watermark-enable-row">' +
+                '<label class="watermark-toggle-label">' +
+                    '<input type="checkbox" id="watermarkEnabled' + suffix + '" ' +
+                        (settings.enabled ? 'checked' : '') +
+                        ' onchange="toggleWatermark(this.checked)">' +
+                    '<span>' + t_enable + '</span>' +
+                '</label>' +
+            '</div>';
+
+            html += '<div class="watermark-type-row">' +
+                '<label><input type="radio" name="watermarkType' + suffix + '" value="text" ' +
+                    (settings.type === 'text' ? 'checked' : '') +
+                    ' onchange="setWatermarkType(\'text\')">' + t_type_text + '</label>' +
+                '<label><input type="radio" name="watermarkType' + suffix + '" value="image" ' +
+                    (settings.type === 'image' ? 'checked' : '') +
+                    ' onchange="setWatermarkType(\'image\')">' + t_type_image + '</label>' +
+            '</div>';
+
+            if (settings.type === 'text') {
+                html += '<div class="watermark-text-row">' +
+                    '<input type="text" id="watermarkText' + suffix + '" ' +
+                        'placeholder="' + t_placeholder + '" ' +
+                        'value="' + (settings.text || '') + '" ' +
+                        'onblur="saveWatermarkText()">' +
+                '</div>';
+            } else {
+                html += '<div class="watermark-image-row">' +
+                    '<button onclick="selectWatermarkImage()">' + t_img_select + '</button>';
+                if (settings.imageData) {
+                    html += '<button onclick="clearWatermarkImage()">' + t_img_clear + '</button>';
+                }
+                html += '</div>';
+            }
+
+            html += '<div class="watermark-position-grid">' +
+                '<div class="position-grid-title">' + t_position + '</div>' +
+                '<div class="position-grid">';
+
+            ['tl', 'tc', 'tr', 'ml', 'mc', 'mr', 'bl', 'bc', 'br'].forEach(pos => {
+                html += '<button class="pos-btn ' + (settings.position === pos ? 'active' : '') + '" ' +
+                    'onclick="setWatermarkPosition(\'' + pos + '\')" title="' + posLabels[pos] + '">' +
+                    posLabels[pos] + '</button>';
+            });
+
+            html += '</div></div>';
+
+            html += '<div class="watermark-opacity-row">' +
+                '<label>' + t_opacity + ': <span id="opacityValue' + suffix + '">' + Math.round(settings.opacity * 100) + '%</span></label>' +
+                '<input type="range" id="watermarkOpacity' + suffix + '" ' +
+                    'min="10" max="100" value="' + Math.round(settings.opacity * 100) + '" ' +
+                    'oninput="updateWatermarkOpacity(this.value)">' +
+            '</div>';
+
+            html += '<div class="watermark-preview-row">' +
+                '<label>' + t_preview + '</label>' +
+                '<div id="watermarkPreview' + suffix + '"></div>' +
+            '</div>';
+
+            html += '</div>';
+
+            container.innerHTML = html;
+            updateWatermarkPreview();
         }
 
         let deferredPrompt = null;
@@ -1809,9 +3157,7 @@
         }
 
         function showInstallButton() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const btn = document.getElementById('installPwaBtn' + suffix);
             if (btn) btn.style.display = 'inline-flex';
         }
@@ -1835,11 +3181,129 @@
         }
 
         function detectBrowserLanguage() {
+            // First check URL parameter ?lang=
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('lang')) {
+                const urlLang = urlParams.get('lang');
+                if (['zh-CN', 'en', 'ja', 'ko'].includes(urlLang)) {
+                    currentLang = urlLang;
+                    localStorage.setItem('lang', currentLang);
+                    return;
+                }
+            }
+
+            // Then check localStorage
+            if (localStorage.getItem('lang')) {
+                return;
+            }
+
+            // Fall back to browser language
             const browserLang = navigator.language || navigator.userLanguage;
-            if (!localStorage.getItem('lang')) {
-                if (browserLang.startsWith('ja')) currentLang = 'ja';
-                else if (browserLang.startsWith('ko')) currentLang = 'ko';
-                else if (!browserLang.startsWith('zh')) currentLang = 'en';
+            if (browserLang.startsWith('ja')) currentLang = 'ja';
+            else if (browserLang.startsWith('ko')) currentLang = 'ko';
+            else if (!browserLang.startsWith('zh')) currentLang = 'en';
+        }
+
+        function updateSEOTags() {
+            // Update document.documentElement.lang
+            document.documentElement.lang = currentLang;
+
+            // SEO content map for each language
+            const seoContent = {
+                'zh-CN': {
+                    title: '免费在线图片压缩器 - 支持JPEG/PNG/WebP/HEIC批量压缩',
+                    description: '免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。',
+                    ogTitle: '免费在线图片压缩器',
+                    ogDesc: '免费的在线图片压缩工具，支持JPEG、PNG、WebP、HEIC格式，提供批量压缩和智能推荐功能。无需注册，完全免费。'
+                },
+                'en': {
+                    title: 'Free Online Image Compressor - Batch Compress JPEG/PNG/WebP/HEIC',
+                    description: 'Free online image compressor supporting JPEG, PNG, WebP, HEIC formats with batch compression and smart recommendations. No registration required.',
+                    ogTitle: 'Free Online Image Compressor',
+                    ogDesc: 'Free online image compressor supporting JPEG, PNG, WebP, HEIC formats with batch compression and smart recommendations. No registration required.'
+                },
+                'ja': {
+                    title: '無料オンライン画像圧縮ツール - JPEG/PNG/WebP/HEIC対応',
+                    description: '無料のオンライン画像圧縮ツール。JPEG、PNG、WebP、HEIC形式に対応し、一括圧縮とスマート推奨機能を提供。登録不要、完全無料。',
+                    ogTitle: '無料オンライン画像圧縮ツール',
+                    ogDesc: '無料のオンライン画像圧縮ツール。JPEG、PNG、WebP、HEIC形式に対応し、一括圧縮とスマート推奨機能を提供。登録不要、完全無料。'
+                },
+                'ko': {
+                    title: '무료 온라인 이미지 압축 도구 - JPEG/PNG/WebP/HEIC 지원',
+                    description: '무료 온라인 이미지 압축 도구입니다. JPEG, PNG, WebP, HEIC 형식을 지원하며 일괄 압축과 스마트 추천 기능을 제공합니다. 등록 없이 완전히 무료입니다.',
+                    ogTitle: '무료 온라인 이미지 압축 도구',
+                    ogDesc: '무료 온라인 이미지 압축 도구입니다. JPEG, PNG, WebP, HEIC 형식을 지원하며 일괄 압축과 스마트 추천 기능을 제공합니다. 등록 없이 완전히 무료입니다.'
+                }
+            };
+
+            const content = seoContent[currentLang] || seoContent['zh-CN'];
+
+            // Update title and meta tags
+            document.title = content.title;
+
+            // Update meta tags
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) metaDesc.content = content.description;
+
+            // Update Open Graph tags
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogTitle) ogTitle.content = content.ogTitle;
+            if (ogDesc) ogDesc.content = content.ogDesc;
+
+            // Update Twitter Card tags
+            const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+            const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+            if (twitterTitle) twitterTitle.content = content.ogTitle;
+            if (twitterDesc) twitterDesc.content = content.ogDesc;
+
+            // Update hreflang Tags
+            document.querySelectorAll('link[hreflang]').forEach(link => {
+                if (link.getAttribute('hreflang') === 'x-default') {
+                    link.href = 'https://image-compressor-kappa-pearl.vercel.app/';
+                } else {
+                    const lang = link.getAttribute('hreflang');
+                    link.href = `https://image-compressor-kappa-pearl.vercel.app/?lang=${lang}`;
+                }
+            });
+
+            // Update canonical URL
+            const canonical = document.querySelector('link[rel="canonical"]');
+            if (canonical) {
+                canonical.href = currentLang === 'zh-CN'
+                    ? 'https://image-compressor-kappa-pearl.vercel.app/'
+                    : `https://image-compressor-kappa-pearl.vercel.app/?lang=${currentLang}`;
+            }
+
+            // Update og:locale
+            const ogLocaleMap = { 'zh-CN': 'zh_CN', 'en': 'en_US', 'ja': 'ja_JP', 'ko': 'ko_KR' };
+            const ogLocale = document.querySelector('meta[property="og:locale"]');
+            if (ogLocale) ogLocale.content = ogLocaleMap[currentLang] || 'zh_CN';
+
+            // Update og:image and twitter:image (already set statically, but ensure they're correct)
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            // Images are the same for all languages, so no change needed
+
+            // Update JSON-LD structured data
+            const jsonLdScript = document.getElementById('jsonLdData');
+            if (jsonLdScript) {
+                const jsonLd = {
+                    "@context": "https://schema.org",
+                    "@type": "WebApplication",
+                    "name": content.ogTitle,
+                    "description": content.ogDesc,
+                    "url": "https://image-compressor-kappa-pearl.vercel.app/",
+                    "applicationCategory": "DesignApplication",
+                    "operatingSystem": "Any",
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "0",
+                        "priceCurrency": "USD"
+                    },
+                    "inLanguage": currentLang
+                };
+                jsonLdScript.textContent = JSON.stringify(jsonLd);
             }
         }
 
@@ -1847,7 +3311,7 @@
             document.querySelectorAll('.lang-app').forEach(el => {
                 el.style.display = el.dataset.lang === currentLang ? 'block' : 'none';
             });
-            document.title = i18n[currentLang].pageTitle || i18n['zh-CN'].pageTitle;
+            updateSEOTags();
             document.getElementById('langSelect').value = currentLang;
             renderHistory();
             if (!deferredPrompt) hideInstallButton();
@@ -1869,6 +3333,8 @@
                 updateUI();
                 renderFileList();
                 renderFavorites();
+                renderBadges();
+                initDarkMode();
             });
 
             // Setup all upload areas
@@ -1913,9 +3379,7 @@
                     const preset = t('presets')[presetKey];
                     if (!preset) return;
 
-                    const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                                   currentLang === 'en' ? 'En' :
-                                   currentLang === 'ja' ? 'Ja' : 'Ko';
+                    const suffix = getSuffix(currentLang);
 
                     document.getElementById('quality' + suffix).value = preset.quality;
                     document.getElementById('maxWidth' + suffix).value = preset.maxWidth;
@@ -1923,6 +3387,13 @@
 
                     const display = document.getElementById('qualityDisplay' + suffix);
                     if (display) display.textContent = preset.quality + '%';
+
+                    // Update URL with new settings
+                    const url = new URL(window.location);
+                    url.searchParams.set('q', preset.quality);
+                    url.searchParams.set('w', preset.maxWidth);
+                    url.searchParams.set('f', preset.format);
+                    history.pushState({}, '', url);
 
                     showToast(preset.message);
                 });
@@ -1966,7 +3437,44 @@
                 });
             });
 
+            // Copy share buttons
+            ['Zh', 'En', 'Ja', 'Ko'].forEach(suffix => {
+                const btn = document.getElementById('copyShareBtn' + suffix);
+                if (!btn) return;
+                btn.addEventListener('click', () => copyShareUrl());
+            });
+
             renderFavorites();
+        }
+
+        // Handle clipboard paste
+        function handleClipboardPaste() {
+            if (!navigator.clipboard || !navigator.clipboard.read) return;
+
+            navigator.clipboard.read().then(items => {
+                let imageFound = false;
+                items.forEach(item => {
+                    const imageType = item.types.find(type => type.startsWith('image/'));
+                    if (imageType) {
+                        imageFound = true;
+                        item.getType(imageType).then(blob => {
+                            const file = new File([blob], 'pasted_image_' + Date.now() + '.png', { type: imageType });
+                            handleFiles([file]);
+                            showToast(t('clipboardPasted') || 'Image added from clipboard');
+                        }).catch(() => {});
+                    }
+                });
+                if (!imageFound) {
+                    // Try text clipboard for image URL
+                    navigator.clipboard.readText().then(text => {
+                        if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
+                            // Could implement URL image fetch here
+                        }
+                    }).catch(() => {});
+                }
+            }).catch(() => {
+                showToast(t('clipboardEmpty') || 'Clipboard empty or no image');
+            });
         }
 
         function handleFiles(files) {
@@ -1993,9 +3501,11 @@
                 if (isValid) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        // Get image dimensions for preview
+                        // Get image dimensions and EXIF orientation
                         const img = new Image();
                         img.onload = () => {
+                            // Extract EXIF orientation (if present in JPEG)
+                            const orientation = getExifOrientation(file);
                             fileQueue.push({
                                 file: file,
                                 name: file.name,
@@ -2003,9 +3513,11 @@
                                 preview: e.target.result,
                                 width: img.width,
                                 height: img.height,
+                                orientation: orientation,
                                 status: 'pending',
                                 compressed: null,
-                                compressedSize: null
+                                compressedSize: null,
+                                selected: true
                             });
                             renderFileList();
                             updateButtonStates();
@@ -2019,9 +3531,11 @@
                                 preview: e.target.result,
                                 width: 0,
                                 height: 0,
+                                orientation: 1,
                                 status: 'pending',
                                 compressed: null,
-                                compressedSize: null
+                                compressedSize: null,
+                                selected: true
                             });
                             renderFileList();
                             updateButtonStates();
@@ -2034,9 +3548,7 @@
         }
 
         function renderFileList() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const listEl = document.getElementById('fileList' + suffix);
             if (!listEl) return;
 
@@ -2045,19 +3557,36 @@
                 return;
             }
 
-            listEl.innerHTML = fileQueue.map((item, index) => `
-                <div class="file-item ${item.status}">
-                    <img class="file-thumb" src="${item.preview}" alt="${item.name}">
+            const allSelected = fileQueue.length > 0 && fileQueue.every(f => f.selected);
+            const hasSelected = fileQueue.some(f => f.selected);
+
+            listEl.innerHTML = `
+                <div class="file-list-header">
+                    <label class="file-list-select-all">
+                        <input type="checkbox" ${allSelected ? 'checked' : ''} onchange="toggleSelectAll()">
+                        <span>${t('selectAll') || '全选'}</span>
+                    </label>
+                    ${hasSelected ? `<button class="batch-download-btn" onclick="downloadSelected()">${t('downloadSelected') || '下载选中'} (${fileQueue.filter(f => f.selected).length})</button>
+                    <button class="batch-delete-btn" onclick="deleteSelected()">${t('deleteSelected') || '删除选中'} (${fileQueue.filter(f => f.selected).length})</button>` : ''}
+                </div>
+                ${fileQueue.map((item, index) => `
+                <div class="file-item ${item.status} ${item.selected ? 'selected' : ''}">
+                    <label class="file-checkbox">
+                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFileSelect(${index})">
+                    </label>
+                    <img class="file-thumb" src="${item.preview}" alt="${escapeHtml(item.name)}">
                     <div class="file-info">
-                        <div class="file-name">${item.name}</div>
+                        <div class="file-name">${escapeHtml(item.name)}</div>
                         <div class="file-size">${formatFileSize(item.size)}
                             ${item.compressedSize ? ' → ' + formatFileSize(item.compressedSize) : ''}
                         </div>
+                        ${item.width && item.height ? `<div class="exif-info">${t('exifDimensions') || '尺寸'}: ${item.width}×${item.height}${item.orientation ? '<span class="orientation-badge">EXIF ' + item.orientation + '</span>' : ''}</div>` : ''}
                     </div>
                     <span class="file-status ${item.status}">${t(item.status)}</span>
+                    ${item.status === 'done' && item.compressed ? `<button class="file-download" onclick="downloadSingleFile(${index})" title="${t('clickDownload')}">⬇</button>` : ''}
                     <button class="file-remove" onclick="removeFile(${index})">✕</button>
                 </div>
-            `).join('');
+            `).join('')}`;
 
             // Update stats bar
             updateStatsBar();
@@ -2065,9 +3594,7 @@
         }
 
         function updateStatsBar() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
 
             const pendingCount = fileQueue.filter(f => f.status === 'pending').length;
             const doneCount = fileQueue.filter(f => f.status === 'done').length;
@@ -2102,10 +3629,86 @@
             renderRecommend();
         }
 
+        function toggleFileSelect(index) {
+            if (fileQueue[index]) {
+                fileQueue[index].selected = !fileQueue[index].selected;
+                renderFileList();
+            }
+        }
+
+        function toggleSelectAll() {
+            const allSelected = fileQueue.length > 0 && fileQueue.every(f => f.selected);
+            fileQueue.forEach(f => f.selected = !allSelected);
+            renderFileList();
+        }
+
+        function downloadSelected() {
+            const selectedFiles = fileQueue.filter(f => f.selected && f.status === 'done' && f.compressed);
+            if (selectedFiles.length === 0) {
+                showToast(t('noFiles') || 'No files selected');
+                return;
+            }
+
+            const suffix = getSuffix(currentLang);
+            const formatEl = document.getElementById('outputFormat' + suffix);
+            const ext = formatEl?.value || 'jpeg';
+
+            selectedFiles.forEach((item, i) => {
+                setTimeout(() => {
+                    const baseName = item.name.replace(/\.[^.]+$/, '');
+                    const link = document.createElement('a');
+                    link.download = baseName + '_compressed.' + ext;
+                    const blobUrl = URL.createObjectURL(item.compressed);
+                    link.href = blobUrl;
+                    link.click();
+                    // 释放Blob URL以防止内存泄漏
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                }, i * 300);
+            });
+
+            showToast(t('downloadStart'));
+        }
+
+        function deleteSelected() {
+            const selectedFiles = fileQueue.filter(f => f.selected);
+            if (selectedFiles.length === 0) {
+                showToast(t('noFiles') || 'No files selected');
+                return;
+            }
+
+            // Remove selected files from queue (iterate in reverse to maintain correct indices)
+            for (let i = fileQueue.length - 1; i >= 0; i--) {
+                if (fileQueue[i].selected) {
+                    fileQueue.splice(i, 1);
+                }
+            }
+            renderFileList();
+            updateButtonStates();
+            renderPreview();
+            renderRecommend();
+            showToast(t('deletedSelected') || `Deleted ${selectedFiles.length} file(s)`);
+        }
+
+        function downloadSingleFile(index) {
+            const item = fileQueue[index];
+            if (!item || item.status !== 'done' || !item.compressed) return;
+
+            const suffix = getSuffix(currentLang);
+            const formatEl = document.getElementById('outputFormat' + suffix);
+            const ext = formatEl?.value || 'jpeg';
+
+            const baseName = item.name.replace(/\.[^.]+$/, '');
+            const link = document.createElement('a');
+            link.download = baseName + '_compressed.' + ext;
+            const blobUrl = URL.createObjectURL(item.compressed);
+            link.href = blobUrl;
+            link.click();
+            // 释放Blob URL以防止内存泄漏
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+        }
+
         function renderPreview() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const panel = document.getElementById('previewPanel' + suffix);
             if (!panel) return;
 
@@ -2204,9 +3807,7 @@
         }
 
         function renderRecommend() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const panel = document.getElementById('recommendPanel' + suffix);
             if (!panel) return;
 
@@ -2237,9 +3838,7 @@
         }
 
         function applyRecommend(presetKey) {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const preset = t('presets')[presetKey];
             if (!preset) return;
 
@@ -2266,9 +3865,7 @@
                 renderFileList();
                 updateButtonStates();
 
-                const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                               currentLang === 'en' ? 'En' :
-                               currentLang === 'ja' ? 'Ja' : 'Ko';
+                const suffix = getSuffix(currentLang);
                 document.getElementById('batchResult' + suffix).classList.remove('show');
                 document.getElementById('previewPanel' + suffix).classList.remove('show');
             }
@@ -2285,10 +3882,46 @@
                 const downloadBtn = document.getElementById('downloadAllBtn' + suffix);
                 const zipBtn = document.getElementById('downloadZipBtn' + suffix);
 
-                if (compressBtn) compressBtn.disabled = !canCompress;
-                if (clearBtn) clearBtn.disabled = !hasFiles;
-                if (downloadBtn) downloadBtn.disabled = !hasCompleted;
-                if (zipBtn) zipBtn.disabled = !hasCompleted;
+                if (compressBtn) {
+                    compressBtn.disabled = !canCompress;
+                    if (canCompress) {
+                        const texts = { Zh: '开始压缩', En: 'Compress All', Ja: 'すべて圧縮', Ko: '모두 압축' };
+                        compressBtn.textContent = texts[suffix];
+                        compressBtn.title = '';
+                    } else {
+                        compressBtn.textContent = hasFiles ? t('noPendingFiles') : t('noFiles');
+                    }
+                }
+                if (clearBtn) {
+                    clearBtn.disabled = !hasFiles;
+                    if (hasFiles) {
+                        const texts = { Zh: '清空列表', En: 'Clear List', Ja: 'クリア', Ko: '초기화' };
+                        clearBtn.textContent = texts[suffix];
+                        clearBtn.title = '';
+                    } else {
+                        clearBtn.textContent = t('noFiles');
+                    }
+                }
+                if (downloadBtn) {
+                    downloadBtn.disabled = !hasCompleted;
+                    if (hasCompleted) {
+                        const texts = { Zh: '下载全部', En: 'Download All', Ja: 'すべてダウンロード', Ko: '모두 다운로드' };
+                        downloadBtn.textContent = texts[suffix];
+                        downloadBtn.title = '';
+                    } else {
+                        downloadBtn.textContent = hasFiles ? t('compressFirst') : t('noFiles');
+                    }
+                }
+                if (zipBtn) {
+                    zipBtn.disabled = !hasCompleted;
+                    if (hasCompleted) {
+                        const texts = { Zh: '📦 下载ZIP', En: '📦 Download ZIP', Ja: '📦 ZIPをダウンロード', Ko: '📦 ZIP 다운로드' };
+                        zipBtn.textContent = texts[suffix];
+                        zipBtn.title = '';
+                    } else {
+                        zipBtn.textContent = hasFiles ? t('compressFirst') : t('noFiles');
+                    }
+                }
             });
         }
 
@@ -2299,9 +3932,7 @@
             isCompressing = true;
             updateButtonStates();
 
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const concurrentEl = document.getElementById('concurrent' + suffix);
             const qualityEl = document.getElementById('quality' + suffix);
             const maxWidthEl = document.getElementById('maxWidth' + suffix);
@@ -2334,6 +3965,21 @@
                     renderFileList();
 
                     try {
+                        let fileToCompress = item.file;
+
+                        // Apply orientation fix if enabled and needed
+                        if (fixOrientationEnabled && item.orientation && item.orientation !== 1) {
+                            try {
+                                const img = await loadImage(item.preview);
+                                const fixedCanvas = applyOrientationFix(img, item.orientation);
+                                fileToCompress = await new Promise(resolve => {
+                                    fixedCanvas.toBlob(blob => resolve(blob || item.file), item.file.type || 'image/jpeg', 0.92);
+                                });
+                            } catch (e) {
+                                console.warn('Orientation fix failed:', e);
+                            }
+                        }
+
                         const options = {
                             maxSizeMB: 10,
                             maxWidthOrHeight: maxWidth,
@@ -2342,10 +3988,32 @@
                             fileType: 'image/' + format
                         };
 
-                        const compressed = await imageCompression(item.file, options);
+const compressedBlob = await imageCompression(fileToCompress, options);
+                        
+                        // Apply watermark if enabled
+                        try {
+                            const img = await loadImage(URL.createObjectURL(compressedBlob));
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            URL.revokeObjectURL(img.src);
+                            
+                            // Apply watermark
+                            await applyWatermark(canvas, item.file);
+                            
+                            // Convert back to blob
+                            compressedBlob = await new Promise(resolve => {
+                                canvas.toBlob(resolve, compressedBlob.type || 'image/jpeg', 0.92);
+                            });
+                        } catch (e) {
+                            console.warn('Watermark failed:', e);
+                        }
+                        
                         fileQueue[index].status = 'done';
-                        fileQueue[index].compressed = compressed;
-                        fileQueue[index].compressedSize = compressed.size;
+                        fileQueue[index].compressed = compressedBlob;
+                        fileQueue[index].compressedSize = compressedBlob.size;
                     } catch (error) {
                         fileQueue[index].status = 'error';
                         console.error('Compression error:', error);
@@ -2403,9 +4071,7 @@
                 .replace(/\{percent\}/g, savedPercent)
                 .replace(/\{url\}/g, window.location.origin);
 
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const resultEl = document.getElementById('batchResult' + suffix);
 
             resultEl.innerHTML = `
@@ -2427,8 +4093,45 @@
                         <div class="batch-stat-label">${t('totalSaved')}</div>
                     </div>
                 </div>
+                ${completed.length > 0 && completed[0].preview ? `
+                <div class="comparison-container">
+                    <div class="comparison-title">${t('comparisonTitle') || '🔍 压缩对比'}</div>
+                    <div class="comparison-slider-wrapper" id="comparisonWrapper">
+                        <img class="comparison-original-img" src="${completed[0].preview}" alt="Original">
+                        <div class="comparison-before" id="comparisonBefore">
+                            <img src="${completed[0].compressed ? URL.createObjectURL(completed[0].compressed) : completed[0].preview}" alt="Compressed">
+                        </div>
+                        <div class="comparison-slider-handle" id="comparisonHandle"></div>
+                    </div>
+                    <div class="comparison-labels">
+                        <span>${t('comparisonOriginal') || '原始'}: ${formatFileSize(completed[0].size)}</span>
+                        <span>${t('comparisonCompressed') || '压缩后'}: ${formatFileSize(completed[0].compressedSize)}</span>
+                    </div>
+                    <div class="comparison-savings-bar">
+                        <strong>${t('savingsRate') || '节省比例'}:</strong> ${savedPercent}% (${formatFileSize(totalSaved)})
+                    </div>
+                </div>
+                ` : ''}
             `;
             resultEl.classList.add('show');
+
+            // Initialize comparison slider if applicable
+            if (completed.length > 0 && completed[0].preview) {
+                setTimeout(initComparisonSlider, 100);
+            }
+
+            // Add save preset button
+            const savePresetBtn = document.createElement('button');
+            savePresetBtn.className = 'save-preset-result-btn';
+            savePresetBtn.textContent = '💾 ' + (t('saveAsPreset') || '保存为预设');
+            savePresetBtn.onclick = () => {
+                const name = prompt(t('presetNamePrompt') || '请输入预设名称：', t('myPreset') || '我的预设');
+                if (name && name.trim()) {
+                    saveFavorite(name.trim());
+                    showToast((t('favoritesSaved') || 'Saved: ') + name);
+                }
+            };
+            resultEl.appendChild(savePresetBtn);
 
             // Add share button
             const shareBtn = document.createElement('button');
@@ -2457,6 +4160,9 @@
 
             // Update achievement stats
             completed.forEach(f => addToStats(f.size, f.compressedSize));
+            recordUse();
+            checkAndUnlockBadges();
+            if (completed.length > 0) showMotivationToast();
         }
 
         async function shareBatchResult(completed, savedPercent) {
@@ -2561,6 +4267,141 @@
             return canvas.toDataURL('image/png');
         }
 
+        // Initialize comparison slider
+        function initComparisonSlider() {
+            const wrapper = document.getElementById('comparisonWrapper');
+            const handle = document.getElementById('comparisonHandle');
+            const before = document.getElementById('comparisonBefore');
+            if (!wrapper || !handle || !before) return;
+
+            let isDragging = false;
+            let snapPoints = [0.25, 0.5, 0.75];
+            let snapThreshold = 0.03;
+            let activeHandleRect = null;
+
+            // Create indicator element
+            let indicator = wrapper.querySelector('.comparison-indicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.className = 'comparison-indicator';
+                indicator.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;border:2px solid rgba(0,122,255,0.5);border-radius:4px;opacity:0;transition:opacity 0.2s ease;z-index:5;';
+                wrapper.appendChild(indicator);
+            }
+
+            const updatePosition = (x, applySnap = true) => {
+                const rect = wrapper.getBoundingClientRect();
+                let pos = (x - rect.left) / rect.width;
+                pos = Math.max(0, Math.min(1, pos));
+
+                // Snap effect
+                if (applySnap) {
+                    for (const snap of snapPoints) {
+                        if (Math.abs(pos - snap) < snapThreshold) {
+                            pos = snap + (pos > snap ? snapThreshold * 0.5 : -snapThreshold * 0.5);
+                            pos = Math.max(0, Math.min(1, pos));
+                            break;
+                        }
+                    }
+                }
+
+                handle.style.left = (pos * 100) + '%';
+                before.style.width = (pos * 100) + '%';
+                indicator.style.width = (pos * 100) + '%';
+            };
+
+            const snapToNearest = () => {
+                const currentPos = parseFloat(handle.style.left) / 100;
+                let nearest = snapPoints[0];
+                let minDist = Math.abs(currentPos - nearest);
+                for (const snap of snapPoints) {
+                    const dist = Math.abs(currentPos - snap);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = snap;
+                    }
+                }
+                if (minDist < snapThreshold * 2) {
+                    handle.style.left = (nearest * 100) + '%';
+                    before.style.width = (nearest * 100) + '%';
+                    indicator.style.width = (nearest * 100) + '%';
+                }
+            };
+
+            // Mouse support
+            handle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                activeHandleRect = handle.getBoundingClientRect();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) updatePosition(e.clientX);
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    indicator.style.opacity = '0';
+                    snapToNearest();
+                }
+            });
+
+            // Touch support with pinch zoom
+            let lastTouchDistance = 0;
+            let pinchStartPos = 0.5;
+
+            const getTouchDistance = (touches) => {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            };
+
+            handle.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    activeHandleRect = handle.getBoundingClientRect();
+                    indicator.style.opacity = '1';
+                } else if (e.touches.length === 2) {
+                    lastTouchDistance = getTouchDistance(e.touches);
+                    pinchStartPos = parseFloat(handle.style.left) / 100;
+                    isDragging = false;
+                }
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2) {
+                    const distance = getTouchDistance(e.touches);
+                    const scale = distance / lastTouchDistance;
+                    scale = Math.max(0.5, Math.min(3, scale));
+                    lastTouchDistance = distance;
+                    const pinchIndicator = document.getElementById('pinchIndicator');
+                    if (pinchIndicator) pinchIndicator.textContent = Math.round(scale * 100) + '%';
+                } else if (e.touches.length === 1 && isDragging) {
+                    updatePosition(e.touches[0].clientX);
+                }
+            }, { passive: false });
+
+            document.addEventListener('touchend', (e) => {
+                if (isDragging && e.touches.length === 0) {
+                    isDragging = false;
+                    indicator.style.opacity = '0';
+                    snapToNearest();
+                }
+                if (e.touches.length < 2) lastTouchDistance = 0;
+            });
+
+            wrapper.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) indicator.style.opacity = '1';
+            }, { passive: true });
+
+            const rect = wrapper.getBoundingClientRect();
+            updatePosition(rect.left + rect.width / 2, false);
+
+            handle.style.transition = 'left 0.15s ease-out';
+            setTimeout(() => { handle.style.transition = ''; }, 150);
+        }
+
         function loadImage(src) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -2582,6 +4423,119 @@
             return canvas.toDataURL('image/avif').startsWith('data:image/avif');
         }
 
+        // Extract EXIF orientation from file
+        function getExifOrientation(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const view = new DataView(e.target.result);
+                    if (view.getUint16(0, false) !== 0xFFD8) {
+                        resolve(1); // Not a valid JPEG
+                        return;
+                    }
+                    const length = view.byteLength;
+                    let offset = 2;
+                    while (offset < length) {
+                        if (view.getUint16(offset, false) === 0xFFE1) {
+                            // APP1 marker - could contain EXIF
+                            const exifData = String.fromCharCode(
+                                view.getUint8(offset + 2),
+                                view.getUint8(offset + 3),
+                                view.getUint8(offset + 4),
+                                view.getUint8(offset + 5)
+                            );
+                            if (exifData === 'Exif') {
+                                // Found EXIF - find Orientation tag
+                                const tiffOffset = offset + 4;
+                                const littleEndian = view.getUint16(tiffOffset + 8, false) === 0x4949;
+                                const ifdOffset = view.getUint32(tiffOffset + 4, littleEndian);
+                                const tags = ['Orientation', 'orientation'];
+                                // Look for Orientation in IFD0
+                                for (let i = 0; i < 12; i++) {
+                                    const tag = view.getUint16(tiffOffset + ifdOffset + i * 12 + 2, littleEndian);
+                                    if (tag === 0x0112) { // Orientation tag
+                                        const value = view.getUint16(tiffOffset + ifdOffset + i * 12 + 8, littleEndian);
+                                        resolve(value || 1);
+                                        return;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        offset += 2 + view.getUint16(offset + 2, false);
+                    }
+                    resolve(1); // Default orientation
+                };
+                reader.onerror = () => resolve(1);
+                reader.readAsArrayBuffer(file.slice(0, 65536));
+            });
+        }
+
+        // Synchronous version using ArrayBuffer parsing
+        function getExifOrientationSync(arrayBuffer) {
+            const view = new DataView(arrayBuffer);
+            if (view.getUint16(0, false) !== 0xFFD8) return 1;
+            const length = view.byteLength;
+            let offset = 2;
+            while (offset < length) {
+                if (view.getUint16(offset, false) === 0xFFE1) {
+                    const exifData = String.fromCharCode(
+                        view.getUint8(offset + 2),
+                        view.getUint8(offset + 3),
+                        view.getUint8(offset + 4),
+                        view.getUint8(offset + 5)
+                    );
+                    if (exifData === 'Exif') {
+                        const tiffOffset = offset + 4;
+                        const littleEndian = view.getUint16(tiffOffset + 8, false) === 0x4949;
+                        const ifdOffset = view.getUint32(tiffOffset + 4, littleEndian);
+                        for (let i = 0; i < 12; i++) {
+                            const tag = view.getUint16(tiffOffset + ifdOffset + i * 12 + 2, littleEndian);
+                            if (tag === 0x0112) {
+                                return view.getUint16(tiffOffset + ifdOffset + i * 12 + 8, littleEndian) || 1;
+                            }
+                        }
+                    }
+                    break;
+                }
+                offset += 2 + view.getUint16(offset + 2, false);
+            }
+            return 1;
+        }
+
+        // Apply orientation fix to canvas
+        function applyOrientationFix(img, orientation) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions based on orientation
+            if (orientation === 5 || orientation === 7) {
+                canvas.width = img.height;
+                canvas.height = img.width;
+            } else if (orientation >= 6 && orientation <= 8) {
+                canvas.width = img.height;
+                canvas.height = img.width;
+            } else {
+                canvas.width = img.width;
+                canvas.height = img.height;
+            }
+
+            // Apply transformation
+            switch (orientation) {
+                case 2: ctx.transform(-1, 0, 0, 1, img.width, 0); break;
+                case 3: ctx.transform(-1, 0, 0, -1, img.width, img.height); break;
+                case 4: ctx.transform(1, 0, 0, -1, 0, img.height); break;
+                case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+                case 6: ctx.transform(0, 1, -1, 0, img.height, 0); break;
+                case 7: ctx.transform(0, -1, -1, 0, img.height, img.width); break;
+                case 8: ctx.transform(0, -1, 1, 0, 0, img.width); break;
+                default: break;
+            }
+
+            ctx.drawImage(img, 0, 0);
+            return canvas;
+        }
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).catch(() => {});
         }
@@ -2593,11 +4547,14 @@
             if (completed.length === 1) {
                 // Single file: try to copy image
                 try {
-                    const canvas = await loadImage(URL.createObjectURL(completed[0].compressed));
+                    const blobUrl = URL.createObjectURL(completed[0].compressed);
+                    const canvas = await loadImage(blobUrl);
                     const ctx = canvas.getContext('2d');
                     const tempCanvas = document.createElement('canvas');
                     tempCanvas.width = canvas.width;
                     tempCanvas.height = canvas.height;
+                    // 加载完成后释放Blob URL
+                    URL.revokeObjectURL(blobUrl);
                     tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
                     tempCanvas.toBlob(async (blob) => {
                         if (blob && navigator.clipboard) {
@@ -2639,9 +4596,7 @@
             const completed = fileQueue.filter(f => f.status === 'done' && f.compressed);
             if (completed.length === 0) return;
 
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const formatEl = document.getElementById('outputFormat' + suffix);
             const ext = formatEl?.value || 'jpeg';
 
@@ -2650,8 +4605,11 @@
                     const baseName = item.name.replace(/\.[^.]+$/, '');
                     const link = document.createElement('a');
                     link.download = baseName + '_compressed.' + ext;
-                    link.href = URL.createObjectURL(item.compressed);
+                    const blobUrl = URL.createObjectURL(item.compressed);
+                    link.href = blobUrl;
                     link.click();
+                    // 释放Blob URL以防止内存泄漏
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
                 }, i * 300);
             });
 
@@ -2685,9 +4643,7 @@
         }
 
         function downloadAllFallback(completed) {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const formatEl = document.getElementById('outputFormat' + suffix);
             const ext = formatEl?.value || 'jpeg';
 
@@ -2696,8 +4652,11 @@
                     const baseName = item.name.replace(/\.[^.]+$/, '');
                     const link = document.createElement('a');
                     link.download = baseName + '_compressed.' + ext;
-                    link.href = URL.createObjectURL(item.compressed);
+                    const blobUrl = URL.createObjectURL(item.compressed);
+                    link.href = blobUrl;
                     link.click();
+                    // 释放Blob URL以防止内存泄漏
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
                 }, i * 300);
             });
 
@@ -2714,9 +4673,7 @@
                 return;
             }
 
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const formatEl = document.getElementById('outputFormat' + suffix);
             const ext = formatEl?.value || 'jpeg';
 
@@ -2750,6 +4707,14 @@
             return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
         }
 
+        // HTML转义函数，防止XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
         // Favorites (localStorage)
         const FAVORITES_KEY = 'image-compressor-favorites';
         const MAX_FAVORITES = 10;
@@ -2761,9 +4726,7 @@
         }
 
         function saveFavorite(name) {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
 
             const quality = document.getElementById('quality' + suffix)?.value || '80';
             const maxWidth = document.getElementById('maxWidth' + suffix)?.value || '1920';
@@ -2786,9 +4749,7 @@
         }
 
         function loadFavorite(fav) {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
 
             document.getElementById('quality' + suffix).value = fav.quality;
             document.getElementById('maxWidth' + suffix).value = fav.maxWidth;
@@ -2829,9 +4790,7 @@
         }
 
         function renderFavorites() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             let panel = document.getElementById('favoritesPanel' + suffix);
             if (!panel) return;
             const favorites = getFavorites();
@@ -2847,6 +4806,40 @@
                         <span class="favorite-del" onclick="deleteFavorite('${f.name.replace(/'/g, "\\'")}')">✕</span>
                     </div>
                 `).join('');
+        }
+
+        // Dark mode
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('darkMode', newTheme === 'dark' ? 'true' : 'false');
+            updateDarkModeButton();
+        }
+
+        function initDarkMode() {
+            const html = document.documentElement;
+            const savedDark = localStorage.getItem('darkMode');
+            if (savedDark) {
+                html.setAttribute('data-theme', savedDark === 'true' ? 'dark' : 'light');
+            } else {
+                // Follow system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.setAttribute('data-theme', 'dark');
+                }
+            }
+            updateDarkModeButton();
+        }
+
+        function updateDarkModeButton() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const btn = document.getElementById('darkModeBtn');
+            if (btn) {
+                btn.textContent = isDark ? '☀️' : '🌙';
+                btn.title = isDark ? t('lightMode') || 'Switch to light mode' : t('darkMode') || 'Switch to dark mode';
+            }
         }
 
         function showToast(message) {
@@ -2936,9 +4929,7 @@
 
         // History UI
         function renderHistory() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const panel = document.getElementById('historyPanel' + suffix);
             if (!panel) return;
             getHistory(20).then(items => {
@@ -2971,9 +4962,7 @@
         }
 
         function applyFromHistory(item) {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             document.getElementById('quality' + suffix).value = item.quality;
             document.getElementById('maxWidth' + suffix).value = item.maxWidth;
             document.getElementById('outputFormat' + suffix).value = item.format;
@@ -2984,12 +4973,12 @@
 
         // Social sharing functions
         function shareToTwitter(message) {
-            const url = `https://twitter.com/intent/tweet?text=${decodeURIComponent(message)}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.origin)}`;
             window.open(url, '_blank', 'width=550,height=420');
         }
 
         function shareToFacebook(message) {
-            const url = `https://www.facebook.com/sharer/sharer.php?quote=${decodeURIComponent(message)}`;
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}&quote=${encodeURIComponent(message)}`;
             window.open(url, '_blank', 'width=550,height=420');
         }
 
@@ -2999,25 +4988,33 @@
         }
 
         function shareToWhatsApp(message) {
-            const url = `https://wa.me/?text=${decodeURIComponent(message)}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(message + '\n' + window.location.origin)}`;
             window.open(url, '_blank');
         }
 
         function shareToWeibo(message) {
-            const url = `https://service.weibo.com/share/share.php?title=${encodeURIComponent(decodeURIComponent(message))}&url=${encodeURIComponent(window.location.origin)}`;
+            const url = `https://service.weibo.com/share/share.php?title=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.origin)}`;
             window.open(url, '_blank', 'width=550,height=420');
         }
 
         // Generate share link with settings
         function generateShareLink() {
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
             const quality = document.getElementById('quality' + suffix)?.value || '80';
             const maxWidth = document.getElementById('maxWidth' + suffix)?.value || '1920';
             const format = document.getElementById('outputFormat' + suffix)?.value || 'jpeg';
+            const concurrent = document.getElementById('concurrent' + suffix)?.value || '2';
             const baseUrl = window.location.origin + window.location.pathname;
-            return `${baseUrl}?q=${quality}&w=${maxWidth}&f=${format}`;
+            return `${baseUrl}?q=${quality}&w=${maxWidth}&f=${format}&c=${concurrent}`;
+        }
+
+        function copyShareUrl() {
+            const url = generateShareLink();
+            navigator.clipboard.writeText(url).then(() => {
+                showToast(t('shareLinkCopied') || 'Share link copied');
+            }).catch(() => {
+                showToast('Failed to copy');
+            });
         }
 
         // Load settings from URL on page load
@@ -3025,9 +5022,7 @@
             const params = new URLSearchParams(window.location.search);
             if (!params.has('q')) return;
 
-            const suffix = currentLang === 'zh-CN' ? 'Zh' :
-                           currentLang === 'en' ? 'En' :
-                           currentLang === 'ja' ? 'Ja' : 'Ko';
+            const suffix = getSuffix(currentLang);
 
             if (params.has('q')) {
                 const q = params.get('q');
@@ -3041,6 +5036,11 @@
             if (params.has('f')) {
                 document.getElementById('outputFormat' + suffix).value = params.get('f');
             }
+            if (params.has('c')) {
+                document.getElementById('concurrent' + suffix).value = params.get('c');
+            }
+            // Show toast when URL preset is loaded
+            showToast(t('urlPresetLoaded') || 'URL preset loaded');
         }
 
         function handleClearHistory() {
