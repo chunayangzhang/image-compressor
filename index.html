@@ -151,7 +151,7 @@
     </div>
 
     <!-- English Interface -->
-    <div id="app-en" class="lang-app" data-lang="en" style="display:none;">
+    <div id="app-en" class="lang-app" data-lang="en">
         <div class="container">
             <header>
                 <h1>🖼️ Image Compressor</h1>
@@ -235,7 +235,7 @@
     </div>
 
     <!-- Japanese Interface -->
-    <div id="app-ja" class="lang-app" data-lang="ja" style="display:none;">
+    <div id="app-ja" class="lang-app" data-lang="ja">
         <div class="container">
             <header>
                 <h1>🖼️ 画像圧縮ツール</h1>
@@ -319,7 +319,7 @@
     </div>
 
     <!-- Korean Interface -->
-    <div id="app-ko" class="lang-app" data-lang="ko" style="display:none;">
+    <div id="app-ko" class="lang-app" data-lang="ko">
         <div class="container">
             <header>
                 <h1>🖼️ 이미지 압축기</h1>
@@ -467,6 +467,14 @@
         .lang-app {
             max-width: 900px;
             margin: 0 auto;
+            display: none;
+        }
+
+        .lang-app[data-lang="zh-CN"],
+        .lang-app[data-lang="en"],
+        .lang-app[data-lang="ja"],
+        .lang-app[data-lang="ko"] {
+            display: block;
         }
 
         .lang-switcher {
